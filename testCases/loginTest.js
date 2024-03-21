@@ -35,8 +35,8 @@ export function LoginTest(userByPhone, userByEmail, doNegativeCase) {
             [TEST_NAME + "post login no body should return 400|"]: (r) => r.status === 400
         })
     }
-    const usrByPhone = PhoneLoginTest(userByPhone, doNegativeCase)
-    const usrByEmail = EmailLoginTest(userByEmail, doNegativeCase)
+    const usrByPhone = PhoneLoginTest(route, userByPhone, doNegativeCase)
+    const usrByEmail = EmailLoginTest(route, userByEmail, doNegativeCase)
     return [usrByPhone, usrByEmail]
 }
 
