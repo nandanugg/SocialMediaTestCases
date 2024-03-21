@@ -108,6 +108,7 @@ function EmailRegistrationTests(route, doNegativeCase) {
         })
     }
 
+    res = testPostJson(route, usr)
     let isSuccess = check(res, {
         [currentFeature + " correct value should return 201 | " + JSON.stringify(usr)]: (r) => r.status === 201,
         [currentFeature + " correct value should have email property"]: (r) => isEqual(r, "data.email", usr.credentialValue),
