@@ -87,7 +87,7 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         credentialValue: userByPhone.phone,
         password: userByPhone.password
     }
-    res = testPostJson(loginRoute, p)
+    res = testPostJson(loginRoute, p, userByEmailHeaders)
     isSuccess = check(res, {
         [currentFeature + " login with correct value should return 200"]: (r) => r.status === 200,
         [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", usr.phone),
@@ -115,8 +115,8 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         email: generateRandomEmail()
     }
 
-    const userByEmailHeader = { "Authorization": "Bearer " + userByEmail.accessToken }
-    const userByPhoneHeader = { "Authorization": "Bearer " + userByPhone.accessToken }
+    const userByEmailHeaders = { "Authorization": "Bearer " + userByEmail.accessToken }
+    const userByPhoneHeaders = { "Authorization": "Bearer " + userByPhone.accessToken }
 
     if (doNegativeCase) {
         // Negative case, no auth
@@ -126,14 +126,14 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         })
 
         // Negative case, no body
-        res = testPostJson(route, {}, userByEmailHeader, ["noContentType"])
+        res = testPostJson(route, {}, userByEmailHeaders, ["noContentType"])
         check(res, {
             [currentFeature + " no body should return 400"]: (r) => r.status === 400
         })
 
         // Negative case, invalid payload 
         linkEmailTestObjects.forEach(payload => {
-            res = testPostJson(route, payload, userByEmailHeader)
+            res = testPostJson(route, payload, userByEmailHeaders)
             check(res, {
                 [currentFeature + ' wrong value should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
@@ -142,7 +142,7 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         // Negative case, updating existing email from user that registered using email       
         res = testPostJson(route, {
             email: userByEmail.Email,
-        }, userByEmailHeader)
+        }, userByEmailHeaders)
         check(res, {
             [currentFeature + " same email from user that registered using email should return 400"]: (r) => r.status === 400
         })
@@ -150,14 +150,14 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         // Negative case, updating existing email from user that registered using phone 
         res = testPostJson(route, {
             email: userByEmail.Email,
-        }, userByPhoneHeader)
+        }, userByPhoneHeaders)
         check(res, {
             [currentFeature + " same email from user that registered using phone should return 409"]: (r) => r.status === 409,
         })
     }
 
     // Postiive case, updating email 
-    res = testPostJson(route, usr, userByPhoneHeader)
+    res = testPostJson(route, usr, userByPhoneHeaders)
     let isSuccess = check(res, {
         [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
     })
@@ -169,7 +169,7 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         credentialValue: userByPhone.phone,
         password: userByPhone.password
     }
-    res = testPostJson(loginRoute, p)
+    res = testPostJson(loginRoute, p, userByPhoneHeaders)
     isSuccess = check(res, {
         [currentFeature + " login with correct value should return 200"]: (r) => r.status === 200,
         [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", userByPhone.phone),
