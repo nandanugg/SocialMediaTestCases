@@ -87,7 +87,7 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         credentialValue: userByPhone.phone,
         password: userByPhone.password
     }
-    res = testPostJson(loginRoute, p, userByEmailHeaders)
+    res = testPostJson(loginRoute, p)
     isSuccess = check(res, {
         [currentFeature + " login with correct value should return 200"]: (r) => r.status === 200,
         [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", usr.phone),
@@ -169,7 +169,7 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         credentialValue: userByPhone.phone,
         password: userByPhone.password
     }
-    res = testPostJson(loginRoute, p, userByPhoneHeaders)
+    res = testPostJson(loginRoute, p)
     isSuccess = check(res, {
         [currentFeature + " login with correct value should return 200"]: (r) => r.status === 200,
         [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", userByPhone.phone),
