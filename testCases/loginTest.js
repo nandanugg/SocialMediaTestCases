@@ -1,0 +1,129 @@
+import { check } from "k6";
+import { generateRandomEmail, generateRandomPassword, generateRandomPhoneNumber, testPostJson } from "../helper";
+
+const TEST_NAME = "(login test)"
+
+const registerPhoneTestObjects = generateTestObjects({
+    credentialType: { type: "string", enum: ["phone"], notNull: true },
+    credentialValue: { type: "string", minLength: 7, maxLength: 13, notNull: true, isPhoneNumber: true, addPlusPrefixPhoneNumber: true },
+    name: { type: "string", minLength: 5, maxLength: 50, notNull: true },
+    password: { type: "string", minLength: 5, maxLength: 15, notNull: true }
+}, {
+    credentialType: "phone",
+    credentialValue: generateRandomPhoneNumber(true),
+    password: generateRandomPassword()
+})
+
+const registerEmailTestObjects = generateTestObjects({
+    credentialType: { type: "string", enum: ["email"], notNull: true },
+    credentialValue: { type: "string", notNull: true, isEmail: true },
+    name: { type: "string", minLength: 5, maxLength: 50, notNull: true },
+    password: { type: "string", minLength: 5, maxLength: 15, notNull: true }
+}, {
+    credentialType: "email",
+    credentialValue: generateRandomEmail(),
+    password: generateRandomPassword()
+})
+
+
+export function LoginTest(userByPhone, userByEmail, doNegativeCase) {
+    let res;
+    let route = __ENV.BASE_URL + "/v1/user/login"
+    if (doNegativeCase) {
+        res = testPostJson(route, {}, {}, ["noContentType"])
+        check(res, {
+            [TEST_NAME + "post login no body should return 400|"]: (r) => r.status === 400
+        })
+    }
+    const usrByPhone = PhoneLoginTest(userByPhone, doNegativeCase)
+    const usrByEmail = EmailLoginTest(userByEmail, doNegativeCase)
+    return [usrByPhone, usrByEmail]
+}
+
+function PhoneLoginTest(route, user, doNegativeCase) {
+    let res
+    const currentFeature = TEST_NAME + "post login phone"
+    const usr = {
+        credentialType: "phone",
+        credentialValue: user.phone,
+        password: user.password
+    }
+    if (doNegativeCase) {
+        registerPhoneTestObjects.forEach(payload => {
+            res = testPostJson(route, payload)
+            check(res, {
+                [currentFeature + ' wrong value should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
+            })
+        })
+        res = testPostJson(route, {
+            credentialType: "phone",
+            credentialValue: generateRandomPhoneNumber(true),
+            password: generateRandomPassword()
+        })
+        check(res, {
+            [currentFeature + " non exist user should return 404"]: (r) => r.status === 404
+        })
+    }
+
+    res = testPostJson(route, usr)
+    let isSuccess = check(res, {
+        [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
+        [currentFeature + " correct value should have phone property"]: (r) => isEqual(r, "data.phone", usr.phone),
+        [currentFeature + " correct value should have email property but empty value"]: (r) => isEqual(r, "data.email", ""),
+        [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", usr.name),
+        [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
+    })
+
+    return isSuccess ? {
+        accesstoken: res.json().data.accesstoken,
+        phone: usr.credentialValue,
+        email: "",
+        name: usr.name,
+        password: usr.password
+    } : null
+
+
+}
+function EmailLoginTest(route, user, doNegativeCase) {
+    let res
+    const currentFeature = TEST_NAME + "post login email"
+    const usr = {
+        credentialType: "email",
+        credentialValue: user.email,
+        password: user.password
+    }
+    if (doNegativeCase) {
+        registerEmailTestObjects.forEach(payload => {
+            res = testPostJson(route, payload)
+            check(res, {
+                [currentFeature + ' wrong value should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
+            })
+        })
+        res = testPostJson(route, {
+            credentialType: "email",
+            credentialValue: generateRandomEmail(),
+            password: generateRandomPassword()
+        })
+        check(res, {
+            [currentFeature + " non exist user should return 404"]: (r) => r.status === 404
+        })
+    }
+
+    res = testPostJson(route, usr)
+    let isSuccess = check(res, {
+        [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
+        [currentFeature + " correct value should have email property"]: (r) => isEqual(r, "data.email", usr.email),
+        [currentFeature + " correct value should have phone property but empty value"]: (r) => isEqual(r, "data.phone", ""),
+        [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", usr.name),
+        [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
+    })
+
+    return isSuccess ? {
+        accesstoken: res.json().data.accesstoken,
+        phone: "",
+        email: usr.credentialValue,
+        name: usr.name,
+        password: usr.password
+    } : null
+
+}
