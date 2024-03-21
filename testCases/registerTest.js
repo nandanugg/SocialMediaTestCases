@@ -76,8 +76,8 @@ function PhoneRegistrationTest(route, doNegativeCase) {
     }
 
     if (doNegativeCase && isSuccess) {
-        res = testPostJson(route, usr)
-        isSuccess = check(res, {
+        const failedRes = testPostJson(route, usr)
+        isSuccess = check(failedRes, {
             [currentFeature + " duplicate user should return 409"]: (r) => r.status === 409
         })
     }
@@ -120,8 +120,8 @@ function EmailRegistrationTests(route, doNegativeCase) {
     }
 
     if (doNegativeCase && isSuccess) {
-        res = testPostJson(route, usr)
-        isSuccess = check(res, {
+        const failedRes = testPostJson(route, usr)
+        isSuccess = check(failedRes, {
             [currentFeature + " duplicate user should return 409"]: (r) => r.status === 409
         })
     }
