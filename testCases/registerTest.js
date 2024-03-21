@@ -72,7 +72,7 @@ function PhoneRegistrationTest(route, doNegativeCase) {
         [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
     if (!isSuccess) {
-        console.log(res.status, res.body)
+        console.log("register failed", res.status, res.body)
     }
 
     if (doNegativeCase && isSuccess) {
@@ -116,7 +116,7 @@ function EmailRegistrationTests(route, doNegativeCase) {
         [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
     if (!isSuccess) {
-        console.log(res.status, res.body)
+        console.log("register failed", res.status, res.body)
     }
 
     if (doNegativeCase && isSuccess) {

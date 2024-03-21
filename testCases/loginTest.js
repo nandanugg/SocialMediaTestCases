@@ -70,6 +70,10 @@ function PhoneLoginTest(route, user, doNegativeCase) {
         [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", user.name),
         [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
+    if (!isSuccess) {
+        console.log("login failed", res.status, res.body)
+    }
+
 
     return isSuccess ? {
         accessToken: res.json().data.accessToken,
@@ -113,6 +117,10 @@ function EmailLoginTest(route, user, doNegativeCase) {
         [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", user.name),
         [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
+    if (!isSuccess) {
+        console.log("login failed", res.status, res.body)
+    }
+
 
     return isSuccess ? {
         accessToken: res.json().data.accessToken,
