@@ -19,8 +19,8 @@ const linkEmailTestObjects = generateTestObjects({
 export function LinkCredential(userByPhone, userByEmail, doNegativeCase) {
     let route = __ENV.BASE_URL + "/v1/user/link"
 
-    const usrByPhone = LinkPhoneTest(route, userByEmail, doNegativeCase)
-    const usrByEmail = LinkEmailTest(route, userByPhone, doNegativeCase)
+    const usrByPhone = LinkPhoneTest(route, userByEmail, userByPhone, doNegativeCase)
+    const usrByEmail = LinkEmailTest(route, userByEmail, userByPhone, doNegativeCase)
 
     return [usrByPhone, usrByEmail]
 }
@@ -88,7 +88,6 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         password: userByPhone.password
     }
     res = testPostJson(loginRoute, p)
-    console.log("link phone number payload", "request:", p, "response:", res.body)
     isSuccess = check(res, {
         [currentFeature + " login with correct value should return 200"]: (r) => r.status === 200,
         [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", usr.phone),
@@ -171,7 +170,6 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         password: userByPhone.password
     }
     res = testPostJson(loginRoute, p)
-    console.log("link phone number payload", "request:", p, "response:", res.body)
     isSuccess = check(res, {
         [currentFeature + " login with correct value should return 200"]: (r) => r.status === 200,
         [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", userByPhone.phone),
