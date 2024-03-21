@@ -29,6 +29,7 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
     let res
     const currentFeature = TEST_NAME + "post link phone"
     const route = baseRoute + "/phone"
+    let loginRoute = __ENV.BASE_URL + "/v1/user/login"
     const usr = {
         phone: generateRandomPhoneNumber(true)
     }
@@ -81,7 +82,7 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
     })
 
     // Positive case, login should give newly updated phone
-    res = testPostJson(route, {
+    res = testPostJson(loginRoute, {
         credentialType: "email",
         credentialValue: userByEmail.email,
         password: userByEmail.password
@@ -108,6 +109,7 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
     let res
     const currentFeature = TEST_NAME + "post link email"
     const route = baseRoute
+    let loginRoute = __ENV.BASE_URL + "/v1/user/login"
     const usr = {
         email: generateRandomEmail()
     }
@@ -161,7 +163,7 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
 
 
     // Positive case, login should give newly updated email 
-    res = testPostJson(route, {
+    res = testPostJson(loginRoute, {
         credentialType: "phone",
         credentialValue: userByPhone.phone,
         password: userByPhone.password
