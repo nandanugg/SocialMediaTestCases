@@ -89,10 +89,10 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
     })
     isSuccess = check(res, {
         [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
-        [currentFeature + " correct value should have phone property"]: (r) => isEqual(r, "data.phone", usr.phone),
-        [currentFeature + " correct value should have email property"]: (r) => isEqual(r, "data.email", userByEmail.email),
-        [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", userByEmail.name),
-        [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
+        [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", usr.phone),
+        [currentFeature + " login with correct value should have email property"]: (r) => isEqual(r, "data.email", userByEmail.email),
+        [currentFeature + " login with correct value should have name property"]: (r) => isEqual(r, "data.name", userByEmail.name),
+        [currentFeature + " login with correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
 
 
@@ -170,10 +170,10 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
     })
     isSuccess = check(res, {
         [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
-        [currentFeature + " correct value should have phone property"]: (r) => isEqual(r, "data.phone", userByPhone.phone),
-        [currentFeature + " correct value should have email property"]: (r) => isEqual(r, "data.email", usr.email),
-        [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", userByPhone.name),
-        [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
+        [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", userByPhone.phone),
+        [currentFeature + " login with correct value should have email property"]: (r) => isEqual(r, "data.email", usr.email),
+        [currentFeature + " login with correct value should have name property"]: (r) => isEqual(r, "data.name", userByPhone.name),
+        [currentFeature + " login with correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
 
 
