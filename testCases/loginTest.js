@@ -6,7 +6,6 @@ const TEST_NAME = "(login test)"
 const registerPhoneTestObjects = generateTestObjects({
     credentialType: { type: "string", enum: ["phone"], notNull: true },
     credentialValue: { type: "string", minLength: 7, maxLength: 13, notNull: true, isPhoneNumber: true, addPlusPrefixPhoneNumber: true },
-    name: { type: "string", minLength: 5, maxLength: 50, notNull: true },
     password: { type: "string", minLength: 5, maxLength: 15, notNull: true }
 }, {
     credentialType: "phone",
@@ -17,7 +16,6 @@ const registerPhoneTestObjects = generateTestObjects({
 const registerEmailTestObjects = generateTestObjects({
     credentialType: { type: "string", enum: ["email"], notNull: true },
     credentialValue: { type: "string", notNull: true, isEmail: true },
-    name: { type: "string", minLength: 5, maxLength: 50, notNull: true },
     password: { type: "string", minLength: 5, maxLength: 15, notNull: true }
 }, {
     credentialType: "email",
