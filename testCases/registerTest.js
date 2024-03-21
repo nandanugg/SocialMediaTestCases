@@ -84,7 +84,7 @@ function PhoneRegistrationTest(route, doNegativeCase) {
 
     return isSuccess ? {
         accessToken: res.json().data.accessToken,
-        phone: usr.credentialvalue,
+        phone: usr.credentialValue,
         name: usr.name,
         password: usr.password
     } : null
@@ -128,7 +128,7 @@ function EmailRegistrationTests(route, doNegativeCase) {
 
     return isSuccess ? {
         accessToken: res.json().data.accessToken,
-        email: usr.credentialvalue,
+        email: usr.credentialValue,
         name: usr.name,
         password: usr.password
     } : null
