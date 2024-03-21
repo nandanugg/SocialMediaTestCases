@@ -172,7 +172,7 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
         [currentFeature + " correct value should have phone property"]: (r) => isEqual(r, "data.phone", userByPhone.phone),
         [currentFeature + " correct value should have email property"]: (r) => isEqual(r, "data.email", usr.email),
-        [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", userByEmail.name),
+        [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", userByPhone.name),
         [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
 
