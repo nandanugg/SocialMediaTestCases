@@ -67,8 +67,8 @@ function PhoneRegistrationTest(route, doNegativeCase) {
     res = testPostJson(route, usr)
     let isSuccess = check(res, {
         [currentFeature + " correct value should return 201 | " + JSON.stringify(usr)]: (r) => r.status === 201,
-        [currentFeature + " correct value should have phone property"]: (r) => isEqual(r, "data.phone", usr.credentialValue),
-        [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", usr.name),
+        [currentFeature + " correct value should have phone property equal to " + usr.credentialValue]: (r) => isEqual(r, "data.phone", usr.credentialValue),
+        [currentFeature + " correct value should have name property equal to" + usr.name]: (r) => isEqual(r, "data.name", usr.name),
         [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
 
@@ -107,8 +107,8 @@ function EmailRegistrationTests(route, doNegativeCase) {
 
     let isSuccess = check(res, {
         [currentFeature + " correct value should return 201 | " + JSON.stringify(usr)]: (r) => r.status === 201,
-        [currentFeature + " correct value should have email property"]: (r) => isEqual(r, "data.email", usr.credentialValue),
-        [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", usr.name),
+        [currentFeature + " correct value should have email property equal to: " + usr.credentialValue]: (r) => isEqual(r, "data.email", usr.credentialValue),
+        [currentFeature + " correct value should have name property equal to: " + usr.name]: (r) => isEqual(r, "data.name", usr.name),
         [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
 
