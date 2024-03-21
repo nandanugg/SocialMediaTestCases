@@ -126,7 +126,7 @@ export function generateUniqueName() {
  * @returns {Promise} - A Promise that resolves with the response from the server.
  */
 export function testGet(route, params, headersObj, options = []) {
-    const headers = options.includes("noContentType") ? { ...headersObj } : { "Content-Type": "application/json", ...headersObj };
+    const headers = options.includes("noContentType") ? Object.assign({}, headersObj) : Object.assign({ "Content-Type": "application/json" }, headersObj)
 
     return http.get(route, params, { headers });
 }
@@ -141,7 +141,7 @@ export function testGet(route, params, headersObj, options = []) {
  * @returns {Promise} - A Promise that resolves with the response from the server.
  */
 export function testPostJson(route, body, headersObj, options = []) {
-    const headers = options.includes("noContentType") ? { ...headersObj } : { "Content-Type": "application/json", ...headersObj };
+    const headers = options.includes("noContentType") ? Object.assign({}, headersObj) : Object.assign({ "Content-Type": "application/json" }, headersObj)
     const parsedBody = options.includes("plainBody") ? body : JSON.stringify(body);
 
     return http.post(route, parsedBody, { headers });
@@ -158,7 +158,7 @@ export function testPostJson(route, body, headersObj, options = []) {
  * @returns {Promise} - A Promise that resolves with the response from the server.
  */
 export function testPatchJson(route, body, headersObj, options = []) {
-    const headers = options.includes("noContentType") ? { ...headersObj } : { "Content-Type": "application/json", ...headersObj };
+    const headers = options.includes("noContentType") ? Object.assign({}, headersObj) : Object.assign({ "Content-Type": "application/json" }, headersObj)
     const parsedBody = options.includes("plainBody") ? body : JSON.stringify(body);
 
     return http.patch(route, parsedBody, { headers });
