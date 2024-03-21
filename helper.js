@@ -23,9 +23,8 @@ export function isExists(v, query) {
             }
         });
         return val
-    } else {
-        console.log("failed to parse json, output:", v.body())
     }
+    console.log("failed to parse json, output:", v.body())
     return false
 }
 
