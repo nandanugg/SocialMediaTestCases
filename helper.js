@@ -257,7 +257,7 @@ export function generateTestObjects(schema, validTemplate) {
 
         if (propRules.isEmail) {
             addViolation(propPath, "notAnEmail");
-            addViolation(propPath, "missing@domain.com");
+            addViolation(propPath, "missingdomain.com");
         }
 
         if (propRules.isPhoneNumber) {
