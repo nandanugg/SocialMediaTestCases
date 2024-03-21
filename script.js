@@ -1,10 +1,10 @@
 import http from 'k6/http';
 import { sleep } from 'k6';
-import { RegistrationTest } from './testCases/registerTest';
-import { LoginTest } from './testCases/loginTest';
-import { TestUpdateAccount } from './testCases/updateAccountTest';
-import { UploadTest } from './testCases/uploadFileTest';
-import { LinkCredential } from './testCases/linkPhoneNumberOrEmailTest';
+import { RegistrationTest } from './testCases/registerTest.js';
+import { LoginTest } from './testCases/loginTest.js';
+import { TestUpdateAccount } from './testCases/updateAccountTest.js';
+import { UploadTest } from './testCases/uploadFileTest.js';
+import { LinkCredential } from './testCases/linkPhoneNumberOrEmailTest.js';
 
 export const options = {
   // A number specifying the number of VUs to run concurrently.
