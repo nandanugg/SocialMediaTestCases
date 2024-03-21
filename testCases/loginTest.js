@@ -1,5 +1,5 @@
 import { check } from "k6";
-import { generateRandomEmail, generateRandomPassword, generateRandomPhoneNumber, testPostJson } from "../helper";
+import { generateRandomEmail, generateRandomPassword, generateRandomPhoneNumber, testPostJson } from "../helper.js";
 
 const TEST_NAME = "(login test)"
 
