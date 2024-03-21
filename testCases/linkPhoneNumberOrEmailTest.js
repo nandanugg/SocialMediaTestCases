@@ -84,8 +84,8 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
     // Positive case, login should give newly updated phone
     const p = {
         credentialType: "phone",
-        credentialValue: userByPhone.phone,
-        password: userByPhone.password
+        credentialValue: usr.phone,
+        password: userByEmail.password
     }
     res = testPostJson(loginRoute, p)
     isSuccess = check(res, {
@@ -166,8 +166,8 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
 
     // Positive case, login should give newly updated email 
     const p = {
-        credentialType: "phone",
-        credentialValue: userByPhone.phone,
+        credentialType: "email",
+        credentialValue: usr.email,
         password: userByPhone.password
     }
     res = testPostJson(loginRoute, p)
