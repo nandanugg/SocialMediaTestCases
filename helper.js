@@ -46,9 +46,6 @@ export function isEqual(v, query, expected) {
     if (typeof expected === "boolean") {
         e = e.toString();
     }
-    if (i === "" && e === "") {
-        return true;
-    }
     return i === e;
 }
 
