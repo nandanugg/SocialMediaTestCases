@@ -88,7 +88,7 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         password: userByEmail.password
     })
     isSuccess = check(res, {
-        [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
+        [currentFeature + " login with correct value should return 200"]: (r) => r.status === 200,
         [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", usr.phone),
         [currentFeature + " login with correct value should have email property"]: (r) => isEqual(r, "data.email", userByEmail.email),
         [currentFeature + " login with correct value should have name property"]: (r) => isEqual(r, "data.name", userByEmail.name),
@@ -169,7 +169,7 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         password: userByPhone.password
     })
     isSuccess = check(res, {
-        [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
+        [currentFeature + " login with correct value should return 200"]: (r) => r.status === 200,
         [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", userByPhone.phone),
         [currentFeature + " login with correct value should have email property"]: (r) => isEqual(r, "data.email", usr.email),
         [currentFeature + " login with correct value should have name property"]: (r) => isEqual(r, "data.name", userByPhone.name),
