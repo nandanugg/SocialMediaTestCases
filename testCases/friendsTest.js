@@ -1,5 +1,5 @@
 import { check } from "k6";
-import { generateRandomEmail, generateTestObjects, generateRandomImageUrl, generateRandomPassword, generateRandomPhoneNumber, generateUniqueName, isExists, testGet, testPatchJson, testPostJson } from "../helper.js";
+import { generateRandomEmail, generateTestObjects, generateRandomImageUrl, generateRandomPassword, generateRandomPhoneNumber, generateUniqueName, isExists, testGet, isEqual, testPatchJson, testPostJson } from "../helper.js";
 
 const TEST_NAME = "(friends test)"
 
