@@ -10,5 +10,5 @@
 ### How to run
 #### For regular testing
 ```bash
-k6 -i 1 --vus 1 script.js
+BASE_URL=http://localhost:8080 k6 -i 1 --vus 1 script.js
 ```
