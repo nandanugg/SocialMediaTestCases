@@ -1,5 +1,10 @@
 import http from 'k6/http';
 import { sleep } from 'k6';
+import { RegistrationTest } from './testCases/registerTest';
+import { LoginTest } from './testCases/loginTest';
+import { TestUpdateAccount } from './testCases/updateAccountTest';
+import { UploadTest } from './testCases/uploadFileTest';
+import { LinkCredential } from './testCases/linkPhoneNumberOrEmailTest';
 
 export const options = {
   // A number specifying the number of VUs to run concurrently.
@@ -56,6 +61,17 @@ export const options = {
 // about authoring k6 scripts.
 //
 export default function () {
-  http.get('https://test.k6.io');
-  sleep(1);
+  let user = RegistrationTest(true)
+  if (!user) return
+
+
+  user = LoginTest(user[0], user[1], true)
+  if (!user) return
+
+  user = LinkCredential(user[0], user[1], true)
+  if (!user) return
+
+  let [userByPhone, userByEmail] = user
+  userByPhone = TestUpdateAccount(userByPhone, true)
+  userByPhone = UploadTest(userByPhone, true)
 }
