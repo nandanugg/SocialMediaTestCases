@@ -26,7 +26,7 @@ export function isExists(v, query) {
             return val
         }
     } catch (error) {
-        console.log("failed to parse json, output:", v.body())
+        console.log("failed to parse json, output:", v.body)
     }
     return false
 }
