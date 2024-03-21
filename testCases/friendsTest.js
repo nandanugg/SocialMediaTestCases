@@ -83,7 +83,7 @@ export function TestFriends(user, doNegativeCase) {
 
 
     return isSuccess ? {
-        accesstoken: res.json().data.accesstoken,
+        accessToken: res.json().data.accessToken,
         phone: user.phone,
         email: user.email,
         name: payload.name,

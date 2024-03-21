@@ -83,7 +83,7 @@ function PhoneRegistrationTest(route, doNegativeCase) {
     }
 
     return isSuccess ? {
-        accesstoken: res.json().data.accesstoken,
+        accessToken: res.json().data.accessToken,
         phone: usr.credentialvalue,
         name: usr.name,
         password: usr.password
@@ -127,7 +127,7 @@ function EmailRegistrationTests(route, doNegativeCase) {
     }
 
     return isSuccess ? {
-        accesstoken: res.json().data.accesstoken,
+        accessToken: res.json().data.accessToken,
         email: usr.credentialvalue,
         name: usr.name,
         password: usr.password

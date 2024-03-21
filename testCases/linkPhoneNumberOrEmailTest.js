@@ -96,7 +96,7 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
 
 
     return isSuccess ? {
-        accesstoken: res.json().data.accesstoken,
+        accessToken: res.json().data.accessToken,
         phone: usr.phone,
         email: userByEmail.email,
         name: userByEmail.name,
@@ -176,7 +176,7 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
 
 
     return isSuccess ? {
-        accesstoken: res.json().data.accesstoken,
+        accessToken: res.json().data.accessToken,
         phone: usrByPhone.phone,
         email: usr.email,
         name: userByEmail.name,
