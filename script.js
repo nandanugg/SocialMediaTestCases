@@ -61,17 +61,15 @@ export const options = {
 // about authoring k6 scripts.
 //
 export default function () {
-  let user = RegistrationTest(true)
-  if (!user) return
+  let [userByPhone, userByEmail] = RegistrationTest(true)
+  if (!userByPhone || !userByEmail) return
 
+  [userByPhone, userByEmail] = LoginTest(userByPhone, userByEmail, true)
+  if (!userByPhone || !userByEmail) return
 
-  user = LoginTest(user[0], user[1], true)
-  if (!user) return
+  [userByPhone, userByEmail] = LinkCredential(userByPhone, userByEmail, true)
+  if (!userByPhone || !userByEmail) return
 
-  user = LinkCredential(user[0], user[1], true)
-  if (!user) return
-
-  let [userByPhone, userByEmail] = user
   userByPhone = TestUpdateAccount(userByPhone, true)
   userByPhone = UploadTest(userByPhone, true)
 }
