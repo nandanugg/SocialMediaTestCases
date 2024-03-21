@@ -34,19 +34,22 @@ export function isExists(v, query) {
 }
 
 /**
- * Checks wether k6 response have the data that query asks and match it
+ * Checks whether k6 response has the data that the query asks and matches it
  * @param {import("k6/http").RefinedResponse<ResponseType | undefined >} v 
  * @param {string} query 
  * @param {any} expected 
  * @returns 
  */
 export function isEqual(v, query, expected) {
-    const i = isExists(v, query)
-    let e = expected
+    const i = isExists(v, query);
+    let e = expected;
     if (typeof expected === "boolean") {
-        e = e.toString()
+        e = e.toString();
     }
-    return i === e
+    if (i === "" && e === "") {
+        return true;
+    }
+    return i === e;
 }
 
 export function generateRandomImageUrl() {
