@@ -46,7 +46,7 @@ export function isEqual(v, query, expected) {
     if (typeof expected === "boolean") {
         e = e.toString()
     }
-    return i && i === e
+    return i === e
 }
 
 export function generateRandomImageUrl() {
