@@ -7,24 +7,27 @@ import http from "k6/http";
  */
 export function isExists(v, query) {
     const splittedQuery = query.split(".")
-    const json = v.json()
-    let val;
-    if (json) {
-        val = json
-        splittedQuery.forEach(query => {
-            const v = val[query]
-            if (!v) {
-                return false
-            }
-            if (typeof v === "boolean") {
-                val = v.toString()
-            } else {
-                val = v
-            }
-        });
-        return val
+    try {
+        const json = v.json()
+        let val;
+        if (json) {
+            val = json
+            splittedQuery.forEach(query => {
+                const v = val[query]
+                if (!v) {
+                    return false
+                }
+                if (typeof v === "boolean") {
+                    val = v.toString()
+                } else {
+                    val = v
+                }
+            });
+            return val
+        }
+    } catch (error) {
+        console.log("failed to parse json, output:", v.body())
     }
-    console.log("failed to parse json, output:", v.body())
     return false
 }
 
