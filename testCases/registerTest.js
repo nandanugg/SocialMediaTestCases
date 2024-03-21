@@ -50,7 +50,7 @@ function PhoneRegistrationTest(route, doNegativeCase) {
     const currentFeature = TEST_NAME + "post register phone"
     const usr = {
         credentialType: "phone",
-        credentialValue: generateRandomPhoneNumber(),
+        credentialValue: generateRandomPhoneNumber(true),
         name: generateUniqueName(),
         password: generateRandomPassword()
     }
@@ -106,7 +106,7 @@ function EmailRegistrationTests(route, doNegativeCase) {
     }
 
     let isSuccess = check(res, {
-        [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
+        [currentFeature + " correct value should return 200 | " + JSON.stringify(usr)]: (r) => r.status === 200,
         [currentFeature + " correct value should have email property"]: (r) => isEqual(r, "data.email", usr.credentialValue),
         [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", usr.name),
         [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),

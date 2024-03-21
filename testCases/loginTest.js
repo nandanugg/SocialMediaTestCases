@@ -111,7 +111,7 @@ function EmailLoginTest(route, user, doNegativeCase) {
 
     res = testPostJson(route, usr)
     let isSuccess = check(res, {
-        [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
+        [currentFeature + " correct value should return 200 | " + JSON.stringify(usr)]: (r) => r.status === 200,
         [currentFeature + " correct value should have email property"]: (r) => isEqual(r, "data.email", usr.email),
         [currentFeature + " correct value should have phone property but empty value"]: (r) => isEqual(r, "data.phone", ""),
         [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", usr.name),
