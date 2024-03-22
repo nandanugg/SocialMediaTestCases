@@ -37,7 +37,7 @@ export function UploadTest(user, doNegativeCase) {
     })
 
     if (!isSuccess) return
-
+    if (!user.imageUrls) user.imageUrls = []
     user.imageUrls.push(res.json().data.imageUrl)
 
     return user
