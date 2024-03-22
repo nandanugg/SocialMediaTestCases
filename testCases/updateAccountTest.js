@@ -5,7 +5,7 @@ const TEST_NAME = "(update account test)"
 
 const updateAccountTestObjects = generateTestObjects({
     imageUrl: { type: "string", isUrl: true, notNull: true },
-    name: { type: "string", minLength: 7, maxLength: 50, notNull: true },
+    name: { type: "string", minLength: 5, maxLength: 50, notNull: true },
 }, {
     imageUrl: "http://image.com/image.png",
     name: "shubaba"
@@ -14,6 +14,7 @@ const updateAccountTestObjects = generateTestObjects({
 export function TestUpdateAccount(user, doNegativeCase) {
     let res
     let route = __ENV.BASE_URL + "/v1/user"
+    let loginRoute = __ENV.BASE_URL + "/v1/user/login"
     const currentFeature = TEST_NAME
 
     const headers = { "Authorization": "Bearer " + user.accessToken }
@@ -51,7 +52,7 @@ export function TestUpdateAccount(user, doNegativeCase) {
     })
 
     // Positive case, login should give newly created data
-    res = testPatchJson(route, {
+    res = testPostJson(loginRoute, {
         credentialType: "email",
         credentialValue: user.email,
         password: user.password
