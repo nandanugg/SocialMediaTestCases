@@ -229,7 +229,7 @@ function TestAddFriends(route, user, doNegativeCase) {
         check(res, {
             [currentFeature + 'correct body with correct userId should return 200 ']: (r) => r.status === 200,
         })
-        user.friends[i.userId].added = true
+        user.friendsKv[i.userId].added = true
     });
 
     // Positive case, get all friends that already added
@@ -245,7 +245,7 @@ function TestAddFriends(route, user, doNegativeCase) {
             if (!Array.isArray(parsedRes)) return false
 
             return parsedRes.every((v, i) => {
-                return user.friendsKv[v.userId] !== undefined && user.friends[v.userId].added === true
+                return user.friendsKv[v.userId] !== undefined && user.friendsKv[v.userId].added === true
             })
         },
     })
