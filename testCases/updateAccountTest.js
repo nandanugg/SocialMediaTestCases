@@ -47,6 +47,9 @@ export function TestUpdateAccount(user, doNegativeCase) {
 
     // Postiive case, updating phone
     res = testPatchJson(route, payload, headers)
+    console.log("route:", route)
+    console.log("payload:", payload)
+    console.log("res:", res)
     let isSuccess = check(res, {
         [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
     })
@@ -57,7 +60,6 @@ export function TestUpdateAccount(user, doNegativeCase) {
         credentialValue: user.email,
         password: user.password
     })
-    console.log(currentFeature, res.status, res.body)
     isSuccess = check(res, {
         [currentFeature + " login with correct value should return 200"]: (r) => r.status === 200,
         [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", user.phone),
