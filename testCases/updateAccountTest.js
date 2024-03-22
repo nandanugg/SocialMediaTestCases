@@ -57,7 +57,7 @@ export function TestUpdateAccount(user, doNegativeCase) {
         credentialValue: user.email,
         password: user.password
     })
-    console.log(currentFeature, res.body)
+    console.log(currentFeature, res.status, res.body)
     isSuccess = check(res, {
         [currentFeature + " login with correct value should return 200"]: (r) => r.status === 200,
         [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", user.phone),
