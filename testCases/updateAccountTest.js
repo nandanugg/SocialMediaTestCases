@@ -49,7 +49,8 @@ export function TestUpdateAccount(user, doNegativeCase) {
     res = testPatchJson(route, payload, headers)
     console.log("route:", route)
     console.log("payload:", payload)
-    console.log("res:", res)
+    console.log("status:", res.status)
+    console.log("res:", res.body)
     let isSuccess = check(res, {
         [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
     })
