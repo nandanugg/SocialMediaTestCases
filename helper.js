@@ -247,6 +247,7 @@ export function generateTestObjects(schema, validTemplate) {
     function generateDataTypeViolations(propPath, type) {
         const dataTypes = {
             'string': ["", 123, true, {}, []],
+            'string-param': [123, true, {}, []],
             'number': ["notANumber", true, {}, []],
             'boolean': ["notABoolean", 123, {}, []],
             'object': ["notAnObject", 123, true, []], // Assuming a non-empty object is valid
@@ -285,7 +286,7 @@ export function generateTestObjects(schema, validTemplate) {
             generateDataTypeViolations(propPath, propRules.type);
         }
         switch (propRules.type) {
-            case 'string':
+            case 'string', 'string-param':
                 if (propRules.minLength !== undefined) {
                     addViolation(propPath, 'a'.repeat(propRules.minLength - 1));
                 }

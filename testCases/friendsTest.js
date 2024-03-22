@@ -6,8 +6,8 @@ const TEST_NAME = "(friends test)"
 const friendParamTestObjects = generateTestObjects({
     limit: { type: "number", min: 0 },
     offset: { type: "number", min: 0 },
-    sortBy: { type: "string", enum: ["friendCount", "createdAt"] },
-    orderBy: { type: "string", enum: ["asc", "desc"] },
+    sortBy: { type: "string-param", enum: ["friendCount", "createdAt"] },
+    orderBy: { type: "string-param", enum: ["asc", "desc"] },
     onlyFriend: { type: "boolean" },
 }, {
     limit: 10,
