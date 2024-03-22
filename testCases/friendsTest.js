@@ -222,7 +222,7 @@ function TestAddFriends(route, user, doNegativeCase) {
 
 
     // Positive case, add friend
-    Object.values(user.friends).forEach((friend, i) => {
+    Object.values(user.friendsKv).forEach((friend, i) => {
         res = testPostJson(route, {
             userId: friend.userId
         }, headers)
