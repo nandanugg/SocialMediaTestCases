@@ -27,10 +27,12 @@ const friendAddTestObjects = generateTestObjects({
 export function TestFriends(user, doNegativeCase) {
     let route = __ENV.BASE_URL + "/v1/friend"
 
-
     let usrWithFriends = TestGetFriends(route, user, doNegativeCase)
     usrWithFriends = TestAddFriends(route, user, doNegativeCase)
+
+    return usrWithFriends
 }
+
 function TestGetFriends(route, user, doNegativeCase) {
     let res;
     const currentFeature = TEST_NAME + "get friend"
@@ -51,7 +53,7 @@ function TestGetFriends(route, user, doNegativeCase) {
         })
     }
 
-    let friends = {}
+    let friendsKv = {}
 
     // Positive case, search paramless
     res = testGet(route, {
@@ -80,7 +82,7 @@ function TestGetFriends(route, user, doNegativeCase) {
             if (!Array.isArray(parsedRes)) return false
 
             return parsedRes.every((v, i) => {
-                friends[v.userId] = v
+                friendsKv[v.userId] = v
                 if (i == 0) return true
                 if (!isValidDate(v.createdAt)) return false
 
@@ -89,7 +91,6 @@ function TestGetFriends(route, user, doNegativeCase) {
 
                 return prevDate.getTime() > curDate.getTime()
             })
-
         },
     })
 
@@ -111,7 +112,7 @@ function TestGetFriends(route, user, doNegativeCase) {
             if (!Array.isArray(parsedRes)) return false
 
             return parsedRes.every((v, i) => {
-                friends[v.userId] = v
+                friendsKv[v.userId] = v
                 if (i == 0) return true
                 if (v.createdAt === undefined) return false
                 if (!isValidDate(v.createdAt)) return false
@@ -143,7 +144,7 @@ function TestGetFriends(route, user, doNegativeCase) {
             if (!Array.isArray(parsedRes)) return false
 
             return parsedRes.every((v, i) => {
-                friends[v.userId] = v
+                friendsKv[v.userId] = v
                 if (i == 0) return true
                 if (v.friendCount === undefined) return false
 
@@ -170,7 +171,7 @@ function TestGetFriends(route, user, doNegativeCase) {
             if (!Array.isArray(parsedRes)) return false
 
             return parsedRes.every((v, i) => {
-                friends[v.userId] = v
+                friendsKv[v.userId] = v
                 if (v.name === undefined) return false
 
                 return v.name.includes("s") || v.name.includes("S")
@@ -187,7 +188,7 @@ function TestGetFriends(route, user, doNegativeCase) {
         name: user.name,
         password: user.password,
         imageUrls: user.imageUrls,
-        friends: friends
+        friendsKv: friendsKv
     }
 }
 
@@ -244,7 +245,7 @@ function TestAddFriends(route, user, doNegativeCase) {
             if (!Array.isArray(parsedRes)) return false
 
             return parsedRes.every((v, i) => {
-                return user.friends[v.userId] !== undefined && user.friends[v.userId].added === true
+                return user.friendsKv[v.userId] !== undefined && user.friends[v.userId].added === true
             })
         },
     })
@@ -256,6 +257,6 @@ function TestAddFriends(route, user, doNegativeCase) {
         name: user.name,
         password: user.password,
         imageUrls: user.imageUrls,
-        friends: friends
+        friendsKv: user.friendsKv
     }
 }
