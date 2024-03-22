@@ -26,7 +26,7 @@ export function TestPost(user, doNegativeCase) {
     let route = __ENV.BASE_URL + "/v1/post"
 
     let usrWithFriends = TestAddPost(route, user, doNegativeCase)
-    usrWithFriends = TestGetPost(route, user, doNegativeCase)
+    usrWithFriends = TestGetPost(route, usrWithFriends, doNegativeCase)
 
     return usrWithFriends
 }
@@ -40,9 +40,9 @@ function TestAddPost(route, user, doNegativeCase) {
         postInHtml: "stress sekali berada di project sprint gaes " + generateUniqueName(),
         tags: [
             tagsDictionary[0],
-            tagsDictionary[randomSeed(tagsDictionary.length - 1)],
-            tagsDictionary[randomSeed(tagsDictionary.length - 1)],
-            tagsDictionary[randomSeed(tagsDictionary.length - 1)],
+            tagsDictionary[Math.floor(Math.random() * tagsDictionary.length)],
+            tagsDictionary[Math.floor(Math.random() * tagsDictionary.length)],
+            tagsDictionary[Math.floor(Math.random() * tagsDictionary.length)],
         ]
     }
 
@@ -57,7 +57,7 @@ function TestAddPost(route, user, doNegativeCase) {
         postTestObjects.forEach(payload => {
             res = testPostJson(route, payload, headers)
             check(res, {
-                [currentFeature + ' wrong body should return 400 | ' + res.url]: (r) => r.status === 400,
+                [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
         })
     }
@@ -65,7 +65,8 @@ function TestAddPost(route, user, doNegativeCase) {
     // Positive case, add post
     res = testPostJson(route, positivePayload, headers)
     check(res, {
-        [currentFeature + " correct body should return 200"]: (r) => r.status === 200,
+        [currentFeature + " correct body should return 200"]: (r) => r.status === 200
+        ,
     })
 
     // Positive case, get post that already added
@@ -82,8 +83,9 @@ function TestAddPost(route, user, doNegativeCase) {
 
             let found = false;
             parsedRes.forEach((v) => {
+                if (v.postId === undefined) return false
                 if (v.post.postInHtml && v.post.postInHtml === positivePayload.postInHtml) {
-                    postKv[v.post.postId] = v.post
+                    postKv[v.postId] = v.post
                     found = true
                 }
             })
@@ -135,20 +137,23 @@ function TestGetPost(route, user, doNegativeCase) {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length == 3
         },
-        [currentFeature + " correct param should be ordered by post created at"]: (r) => {
+        [currentFeature + "text search correct param should be ordered by post created at"]: (r) => {
             const parsedRes = isExists(r, "data")
-            if (parsedRes.post === undefined) return false
+            if (!Array.isArray(parsedRes)) return false
 
             return parsedRes.every((v, i) => {
+                if (i == 0) return true
                 if (v.post === undefined) return false
+                if (v.postId === undefined) return false
                 if (v.post.createdAt === undefined) return false
                 if (!isValidDate(v.post.createdAt)) return false
+
+
+                const curDate = new Date(v.post.createdAt)
+                const prevDate = new Date(parsedRes[i - 1].post.createdAt)
+
                 postKv[v.postId] = v
-
-                const curDate = new Date(v.createdAt)
-                const prevDate = new Date(parsedRes[i - 1].createdAt)
-
-                return prevDate.getTime() <= curDate.getTime()
+                return prevDate.getTime() >= curDate.getTime()
             })
         },
         [currentFeature + " correct param should have data that contains s"]: (r) => {
@@ -177,19 +182,21 @@ function TestGetPost(route, user, doNegativeCase) {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length == 3
         },
-        [currentFeature + " correct param should be ordered by post created at"]: (r) => {
+        [currentFeature + "tag search correct param should be ordered by post created at"]: (r) => {
             const parsedRes = isExists(r, "data")
-            if (parsedRes.post === undefined) return false
+            if (!Array.isArray(parsedRes)) return false
 
             return parsedRes.every((v, i) => {
-                postKv[v.postId] = v
+                if (i == 0) return true
                 if (v.post === undefined) return false
+                if (v.postId === undefined) return false
                 if (v.post.createdAt === undefined) return false
                 if (!isValidDate(v.post.createdAt)) return false
 
-                const curDate = new Date(v.createdAt)
-                const prevDate = new Date(parsedRes[i - 1].createdAt)
+                const curDate = new Date(v.post.createdAt)
+                const prevDate = new Date(parsedRes[i - 1].post.createdAt)
 
+                postKv[v.postId] = v
                 return prevDate.getTime() <= curDate.getTime()
             })
         },
@@ -198,10 +205,11 @@ function TestGetPost(route, user, doNegativeCase) {
             if (!Array.isArray(parsedRes)) return false
 
             return parsedRes.every((v) => {
-                postKv[v.postId] = v
                 if (v.post === undefined) return false
+                if (v.postId === undefined) return false
                 if (v.post.tags === undefined) return false
 
+                postKv[v.postId] = v
                 return v.post.tags.includes(tagsDictionary[0])
             })
 
@@ -220,11 +228,3 @@ function TestGetPost(route, user, doNegativeCase) {
     }
 }
 
-// function TestCommentPost(route, user, doNegativeCase) {
-//     let res;
-//     const currentFeature = TEST_NAME + "add post comment"
-//     const headers = { "Authorization": "Bearer " + user.accessToken }
-//     if (doNegativeCase) {
-
-//     }
-// }

@@ -38,7 +38,7 @@ export function TestUpdateAccount(user, doNegativeCase) {
             [currentFeature + " no body should return 400"]: (r) => r.status === 400
         })
 
-        // Negative case, invalid payload
+        // Negative case, invalid body
         updateAccountTestObjects.forEach(payload => {
             res = testPatchJson(route, payload, headers)
             check(res, {

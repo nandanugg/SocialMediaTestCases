@@ -1,16 +1,18 @@
-import http, { head } from 'k6/http';
+import http from 'k6/http';
 import { check } from 'k6';
 import { isExists } from '../helper.js';
 const TEST_NAME = "(upload test)"
 
 // Prepare the payload using the file to be uploaded
 var positivePayload = {
+    // eslint-disable-next-line no-undef
     file: http.file(open('../figure/image15KB.jpg', 'b'), 'image1.jpg'),
 };
 
 
 export function UploadTest(user, doNegativeCase) {
     let res;
+    // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/image"
     const currentFeature = TEST_NAME
     const headers = { "Authorization": "Bearer " + user.accessToken }

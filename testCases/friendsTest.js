@@ -66,7 +66,6 @@ function TestGetFriends(route, user, doNegativeCase) {
             return Array.isArray(parsedRes) && parsedRes.length > 0
         },
     })
-    console.log(res.headers, res.url);
 
     // Postiive case, pagination and createdAt default sorting
     res = testGet(route, {
@@ -79,18 +78,19 @@ function TestGetFriends(route, user, doNegativeCase) {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length == 10
         },
-        [currentFeature + " correct param should have correct createdAt format and sorted desc"]: (r) => {
+        [currentFeature + " correct param should have correct createdAt format and ordered desc"]: (r) => {
             const parsedRes = isExists(r, "data")
             if (!Array.isArray(parsedRes)) return false
 
             return parsedRes.every((v, i) => {
-                friendsKv[v.userId] = v
                 if (i == 0) return true
+                if (v.createdAt === undefined) return false
                 if (!isValidDate(v.createdAt)) return false
 
                 const curDate = new Date(v.createdAt)
                 const prevDate = new Date(parsedRes[i - 1].createdAt)
 
+                friendsKv[v.userId] = v
                 return prevDate.getTime() >= curDate.getTime()
             })
         },
@@ -105,16 +105,16 @@ function TestGetFriends(route, user, doNegativeCase) {
     }, headers)
     check(res, {
         [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
+        // TODO: insert a lot of user first before testing
         [currentFeature + " correct param should have only ten data"]: (r) => {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length == 3
         },
-        [currentFeature + " correct param should have correct createdAt format and sorted asc"]: (r) => {
+        [currentFeature + " correct param should have correct createdAt format and ordered asc"]: (r) => {
             const parsedRes = isExists(r, "data")
             if (!Array.isArray(parsedRes)) return false
 
             return parsedRes.every((v, i) => {
-                friendsKv[v.userId] = v
                 if (i == 0) return true
                 if (v.createdAt === undefined) return false
                 if (!isValidDate(v.createdAt)) return false
@@ -122,6 +122,7 @@ function TestGetFriends(route, user, doNegativeCase) {
                 const curDate = new Date(v.createdAt)
                 const prevDate = new Date(parsedRes[i - 1].createdAt)
 
+                friendsKv[v.userId] = v
                 return prevDate.getTime() <= curDate.getTime()
             })
 
@@ -141,15 +142,15 @@ function TestGetFriends(route, user, doNegativeCase) {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length == 3
         },
-        [currentFeature + " correct param should have correct friendCount format and sorted asc"]: (r) => {
+        [currentFeature + " correct param should have correct friendCount format and ordered asc"]: (r) => {
             const parsedRes = isExists(r, "data")
             if (!Array.isArray(parsedRes)) return false
 
             return parsedRes.every((v, i) => {
-                friendsKv[v.userId] = v
                 if (i == 0) return true
                 if (v.friendCount === undefined) return false
 
+                friendsKv[v.userId] = v
                 return parsedRes[i - 1].friendCount <= v.friendCount
             })
 
@@ -164,6 +165,7 @@ function TestGetFriends(route, user, doNegativeCase) {
     }, headers)
     check(res, {
         [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
+        // TODO: insert a lot of user first before testing
         [currentFeature + " correct param should have only three data"]: (r) => {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length == 3
@@ -205,7 +207,7 @@ function TestAddFriends(route, user, doNegativeCase) {
             [currentFeature + " no auth should return 401"]: (r) => r.status === 401
         })
 
-        // Negative case, invalid param
+        // Negative case, invalid body 
         friendAddTestObjects.forEach(payload => {
             res = testPostJson(route, payload, headers)
             check(res, {
@@ -224,14 +226,14 @@ function TestAddFriends(route, user, doNegativeCase) {
 
 
     // Positive case, add friend
-    Object.values(user.friendsKv).forEach((friend, i) => {
+    Object.values(user.friendsKv).forEach((friend) => {
         res = testPostJson(route, {
             userId: friend.userId
         }, headers)
         check(res, {
             [currentFeature + 'correct body with correct userId should return 200 ']: (r) => r.status === 200,
         })
-        user.friendsKv[i.userId].added = true
+        user.friendsKv[friend.userId].added = true
     });
 
     // Positive case, get all friends that already added

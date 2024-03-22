@@ -26,6 +26,7 @@ const registerEmailTestObjects = generateTestObjects({
 
 export function LoginTest(userByPhone, userByEmail, doNegativeCase) {
     let res;
+    // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/user/login"
     if (doNegativeCase) {
         res = testPostJson(route, {}, {}, ["noContentType"])
@@ -47,6 +48,7 @@ function PhoneLoginTest(route, user, doNegativeCase) {
         password: user.password
     }
     if (doNegativeCase) {
+        // Negative case, invalid body
         registerPhoneTestObjects.forEach(payload => {
             res = testPostJson(route, payload)
             check(res, {
@@ -94,6 +96,7 @@ function EmailLoginTest(route, user, doNegativeCase) {
         password: user.password
     }
     if (doNegativeCase) {
+        // Negative case, invalid body
         registerEmailTestObjects.forEach(payload => {
             res = testPostJson(route, payload)
             check(res, {

@@ -4,6 +4,8 @@ import { TestUpdateAccount } from './testCases/updateAccountTest.js';
 import { UploadTest } from './testCases/uploadFileTest.js';
 import { LinkCredential } from './testCases/linkPhoneNumberOrEmailTest.js';
 import { TestFriends } from './testCases/friendsTest.js';
+import { TestPost } from './testCases/postTest.js';
+import { TestPostComment } from './testCases/postCommentTest.js';
 
 export const options = {
   // A number specifying the number of VUs to run concurrently.
@@ -73,4 +75,6 @@ export default function () {
   userByPhone = UploadTest(userByPhone, true)
 
   userByPhone = TestFriends(userByPhone, true)
+  userByPhone = TestPost(userByPhone, true)
+  userByPhone = TestPostComment(userByPhone, true)
 }

@@ -58,6 +58,7 @@ function PhoneRegistrationTest(route, doNegativeCase) {
     }
 
     if (doNegativeCase) {
+        // Negative case, invalid body
         registerPhoneTestObjects.forEach(payload => {
             res = testPostJson(route, payload)
             check(res, {
@@ -102,6 +103,7 @@ function EmailRegistrationTests(route, doNegativeCase) {
     }
 
     if (doNegativeCase) {
+        // Negative case, invalid body
         registerEmailTestObjects.forEach(payload => {
             res = testPostJson(route, payload)
             check(res, {

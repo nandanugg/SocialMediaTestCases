@@ -1,5 +1,5 @@
 import { check } from "k6";
-import { generateRandomEmail, isEqual, generateRandomPassword, generateRandomPhoneNumber, testPostJson, generateTestObjects, isExists } from "../helper.js";
+import { generateRandomEmail, isEqual, generateRandomPhoneNumber, testPostJson, generateTestObjects, isExists } from "../helper.js";
 
 const TEST_NAME = "(link phone / email test)"
 
@@ -17,6 +17,7 @@ const linkEmailTestObjects = generateTestObjects({
 
 
 export function LinkCredential(userByPhone, userByEmail, doNegativeCase) {
+    // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/user/link"
 
     const usrByPhone = LinkPhoneTest(route, userByEmail, userByPhone, doNegativeCase)
@@ -29,6 +30,7 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
     let res
     const currentFeature = TEST_NAME + "post link phone"
     const route = baseRoute + "/phone"
+    // eslint-disable-next-line no-undef
     let loginRoute = __ENV.BASE_URL + "/v1/user/login"
     const positivePayload = {
         phone: generateRandomPhoneNumber(true)
@@ -50,7 +52,7 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
             [currentFeature + " no body should return 400"]: (r) => r.status === 400
         })
 
-        // Negative case, invalid payload
+        // Negative case, invalid body
         linkPhoneTestObjects.forEach(payload => {
             res = testPostJson(route, payload, userByPhoneHeaders)
             check(res, {
@@ -108,6 +110,7 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
     let res
     const currentFeature = TEST_NAME + "post link email"
     const route = baseRoute
+    // eslint-disable-next-line no-undef
     let loginRoute = __ENV.BASE_URL + "/v1/user/login"
     const positivePayload = {
         email: generateRandomEmail()
@@ -129,7 +132,7 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
             [currentFeature + " no body should return 400"]: (r) => r.status === 400
         })
 
-        // Negative case, invalid payload 
+        // Negative case, invalid body 
         linkEmailTestObjects.forEach(payload => {
             res = testPostJson(route, payload, userByEmailHeaders)
             check(res, {
