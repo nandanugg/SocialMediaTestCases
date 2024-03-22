@@ -1,4 +1,4 @@
-import http from 'k6/http';
+import http, { head } from 'k6/http';
 import { check } from 'k6';
 import { isExists } from '../helper.js';
 const TEST_NAME = "(upload test)"
@@ -30,6 +30,7 @@ export function UploadTest(user, doNegativeCase) {
 
     // Positive case, upload file
     res = http.post(route, payload, headers);
+    console.log("upload file", payload, headers)
     let isSuccess = check(res, {
         [currentFeature + "correct file should return 200"]: (v) => v.status === 200,
         [currentFeature + "correct file should have imageUrl"]: (v) => isExists(v, "data.imageUrl"),
