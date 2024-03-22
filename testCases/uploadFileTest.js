@@ -4,7 +4,7 @@ import { isExists } from '../helper.js';
 const TEST_NAME = "(upload test)"
 
 // Prepare the payload using the file to be uploaded
-var payload = {
+var positivePayload = {
     file: http.file(open('../figure/image15KB.jpg', 'b'), 'image1.jpg'),
 };
 
@@ -29,7 +29,7 @@ export function UploadTest(user, doNegativeCase) {
     }
 
     // Positive case, upload file
-    res = http.post(route, payload, { headers });
+    res = http.post(route, positivePayload, { headers });
     console.log("upload file headers", res.headers)
     let isSuccess = check(res, {
         [currentFeature + "correct file should return 200"]: (v) => v.status === 200,

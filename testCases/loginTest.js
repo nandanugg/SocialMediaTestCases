@@ -41,7 +41,7 @@ export function LoginTest(userByPhone, userByEmail, doNegativeCase) {
 function PhoneLoginTest(route, user, doNegativeCase) {
     let res
     const currentFeature = TEST_NAME + "post login phone"
-    const usr = {
+    const positivePayload = {
         credentialType: "phone",
         credentialValue: user.phone,
         password: user.password
@@ -63,9 +63,9 @@ function PhoneLoginTest(route, user, doNegativeCase) {
         })
     }
 
-    res = testPostJson(route, usr)
+    res = testPostJson(route, positivePayload)
     let isSuccess = check(res, {
-        [currentFeature + " correct value should return 200 | " + JSON.stringify(usr)]: (r) => r.status === 200,
+        [currentFeature + " correct value should return 200 | " + JSON.stringify(positivePayload)]: (r) => r.status === 200,
         [currentFeature + " correct value should have phone property"]: (r) => isEqual(r, "data.phone", user.phone),
         [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", user.name),
         [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
@@ -77,7 +77,7 @@ function PhoneLoginTest(route, user, doNegativeCase) {
 
     return isSuccess ? {
         accessToken: res.json().data.accessToken,
-        phone: usr.credentialValue,
+        phone: positivePayload.credentialValue,
         email: "",
         name: user.name,
         password: user.password
@@ -88,7 +88,7 @@ function PhoneLoginTest(route, user, doNegativeCase) {
 function EmailLoginTest(route, user, doNegativeCase) {
     let res
     const currentFeature = TEST_NAME + "post login email"
-    const usr = {
+    const positivePayload = {
         credentialType: "email",
         credentialValue: user.email,
         password: user.password
@@ -110,9 +110,9 @@ function EmailLoginTest(route, user, doNegativeCase) {
         })
     }
 
-    res = testPostJson(route, usr)
+    res = testPostJson(route, positivePayload)
     let isSuccess = check(res, {
-        [currentFeature + " correct value should return 200 | " + JSON.stringify(usr)]: (r) => r.status === 200,
+        [currentFeature + " correct value should return 200 | " + JSON.stringify(positivePayload)]: (r) => r.status === 200,
         [currentFeature + " correct value should have email property"]: (r) => isEqual(r, "data.email", user.email),
         [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", user.name),
         [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
@@ -125,7 +125,7 @@ function EmailLoginTest(route, user, doNegativeCase) {
     return isSuccess ? {
         accessToken: res.json().data.accessToken,
         phone: "",
-        email: usr.credentialValue,
+        email: positivePayload.credentialValue,
         name: user.name,
         password: user.password
     } : null

@@ -18,7 +18,7 @@ export function TestUpdateAccount(user, doNegativeCase) {
     const currentFeature = TEST_NAME
 
     const headers = { "Authorization": "Bearer " + user.accessToken }
-    const payload = {
+    const positivePayload = {
         imageUrl: generateRandomImageUrl(),
         name: generateUniqueName()
     }
@@ -46,7 +46,7 @@ export function TestUpdateAccount(user, doNegativeCase) {
     }
 
     // Postiive case, updating phone
-    res = testPatchJson(route, payload, headers)
+    res = testPatchJson(route, positivePayload, headers)
     let isSuccess = check(res, {
         [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
     })
@@ -61,7 +61,7 @@ export function TestUpdateAccount(user, doNegativeCase) {
         [currentFeature + " login with correct value should return 200"]: (r) => r.status === 200,
         [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", user.phone),
         [currentFeature + " login with correct value should have email property"]: (r) => isEqual(r, "data.email", user.email),
-        [currentFeature + " login with correct value should have name property"]: (r) => isEqual(r, "data.name", payload.name),
+        [currentFeature + " login with correct value should have name property"]: (r) => isEqual(r, "data.name", positivePayload.name),
         [currentFeature + " login with correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
 
@@ -70,8 +70,8 @@ export function TestUpdateAccount(user, doNegativeCase) {
         accessToken: res.json().data.accessToken,
         phone: user.phone,
         email: user.email,
-        name: payload.name,
+        name: positivePayload.name,
         password: user.password,
-        imageUrl: payload.imageUrl
+        imageUrl: positivePayload.imageUrl
     } : null
 }

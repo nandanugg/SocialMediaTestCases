@@ -41,7 +41,7 @@ export function TestFriends(user, doNegativeCase) {
         })
     }
 
-    // Postiive case, get by query
+    // Postive case, get by query
     res = testGet(route, {
         search: "s"
     }, headers)

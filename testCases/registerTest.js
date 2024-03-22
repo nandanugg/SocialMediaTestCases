@@ -48,7 +48,7 @@ export function RegistrationTest(doNegativeCase) {
 function PhoneRegistrationTest(route, doNegativeCase) {
     let res
     const currentFeature = TEST_NAME + "post register phone"
-    const usr = {
+    const positivePayload = {
         credentialType: "phone",
         credentialValue: generateRandomPhoneNumber(true),
         name: generateUniqueName(),
@@ -64,11 +64,11 @@ function PhoneRegistrationTest(route, doNegativeCase) {
         })
     }
 
-    res = testPostJson(route, usr)
+    res = testPostJson(route, positivePayload)
     let isSuccess = check(res, {
-        [currentFeature + " correct value should return 201 | " + JSON.stringify(usr)]: (r) => r.status === 201,
-        [currentFeature + " correct value should have phone property"]: (r) => isEqual(r, "data.phone", usr.credentialValue),
-        [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", usr.name),
+        [currentFeature + " correct value should return 201 | " + JSON.stringify(positivePayload)]: (r) => r.status === 201,
+        [currentFeature + " correct value should have phone property"]: (r) => isEqual(r, "data.phone", positivePayload.credentialValue),
+        [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", positivePayload.name),
         [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
     if (!isSuccess) {
@@ -76,7 +76,7 @@ function PhoneRegistrationTest(route, doNegativeCase) {
     }
 
     if (doNegativeCase && isSuccess) {
-        const failedRes = testPostJson(route, usr)
+        const failedRes = testPostJson(route, positivePayload)
         isSuccess = check(failedRes, {
             [currentFeature + " duplicate user should return 409"]: (r) => r.status === 409
         })
@@ -84,15 +84,15 @@ function PhoneRegistrationTest(route, doNegativeCase) {
 
     return isSuccess ? {
         accessToken: res.json().data.accessToken,
-        phone: usr.credentialValue,
-        name: usr.name,
-        password: usr.password
+        phone: positivePayload.credentialValue,
+        name: positivePayload.name,
+        password: positivePayload.password
     } : null
 }
 function EmailRegistrationTests(route, doNegativeCase) {
     let res
     const currentFeature = TEST_NAME + "post register email"
-    const usr = {
+    const positivePayload = {
         credentialType: "email",
         credentialValue: generateRandomEmail(),
         name: generateUniqueName(),
@@ -108,11 +108,11 @@ function EmailRegistrationTests(route, doNegativeCase) {
         })
     }
 
-    res = testPostJson(route, usr)
+    res = testPostJson(route, positivePayload)
     let isSuccess = check(res, {
-        [currentFeature + " correct value should return 201 | " + JSON.stringify(usr)]: (r) => r.status === 201,
-        [currentFeature + " correct value should have email property"]: (r) => isEqual(r, "data.email", usr.credentialValue),
-        [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", usr.name),
+        [currentFeature + " correct value should return 201 | " + JSON.stringify(positivePayload)]: (r) => r.status === 201,
+        [currentFeature + " correct value should have email property"]: (r) => isEqual(r, "data.email", positivePayload.credentialValue),
+        [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", positivePayload.name),
         [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
     if (!isSuccess) {
@@ -120,7 +120,7 @@ function EmailRegistrationTests(route, doNegativeCase) {
     }
 
     if (doNegativeCase && isSuccess) {
-        const failedRes = testPostJson(route, usr)
+        const failedRes = testPostJson(route, positivePayload)
         isSuccess = check(failedRes, {
             [currentFeature + " duplicate user should return 409"]: (r) => r.status === 409
         })
@@ -128,8 +128,8 @@ function EmailRegistrationTests(route, doNegativeCase) {
 
     return isSuccess ? {
         accessToken: res.json().data.accessToken,
-        email: usr.credentialValue,
-        name: usr.name,
-        password: usr.password
+        email: positivePayload.credentialValue,
+        name: positivePayload.name,
+        password: positivePayload.password
     } : null
 }

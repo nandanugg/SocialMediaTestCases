@@ -30,7 +30,7 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
     const currentFeature = TEST_NAME + "post link phone"
     const route = baseRoute + "/phone"
     let loginRoute = __ENV.BASE_URL + "/v1/user/login"
-    const usr = {
+    const positivePayload = {
         phone: generateRandomPhoneNumber(true)
     }
 
@@ -76,21 +76,20 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
     }
 
     // Postiive case, updating phone
-    res = testPostJson(route, usr, userByEmailHeaders)
+    res = testPostJson(route, positivePayload, userByEmailHeaders)
     let isSuccess = check(res, {
         [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
     })
 
     // Positive case, login should give newly updated phone
-    const p = {
+    res = testPostJson(loginRoute, {
         credentialType: "phone",
-        credentialValue: usr.phone,
+        credentialValue: positivePayload.phone,
         password: userByEmail.password
-    }
-    res = testPostJson(loginRoute, p)
+    })
     isSuccess = check(res, {
         [currentFeature + " login with correct value should return 200"]: (r) => r.status === 200,
-        [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", usr.phone),
+        [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", positivePayload.phone),
         [currentFeature + " login with correct value should have email property"]: (r) => isEqual(r, "data.email", userByEmail.email),
         [currentFeature + " login with correct value should have name property"]: (r) => isEqual(r, "data.name", userByEmail.name),
         [currentFeature + " login with correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
@@ -98,7 +97,7 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
 
     return isSuccess ? {
         accessToken: res.json().data.accessToken,
-        phone: usr.phone,
+        phone: positivePayload.phone,
         email: userByEmail.email,
         name: userByEmail.name,
         password: userByEmail.password
@@ -110,7 +109,7 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
     const currentFeature = TEST_NAME + "post link email"
     const route = baseRoute
     let loginRoute = __ENV.BASE_URL + "/v1/user/login"
-    const usr = {
+    const positivePayload = {
         email: generateRandomEmail()
     }
 
@@ -156,23 +155,22 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
     }
 
     // Postiive case, updating email 
-    res = testPostJson(route, usr, userByPhoneHeaders)
+    res = testPostJson(route, positivePayload, userByPhoneHeaders)
     let isSuccess = check(res, {
         [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
     })
 
 
     // Positive case, login should give newly updated email 
-    const p = {
+    res = testPostJson(loginRoute, {
         credentialType: "email",
-        credentialValue: usr.email,
+        credentialValue: positivePayload.email,
         password: userByPhone.password
-    }
-    res = testPostJson(loginRoute, p)
+    })
     isSuccess = check(res, {
         [currentFeature + " login with correct value should return 200"]: (r) => r.status === 200,
         [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", userByPhone.phone),
-        [currentFeature + " login with correct value should have email property"]: (r) => isEqual(r, "data.email", usr.email),
+        [currentFeature + " login with correct value should have email property"]: (r) => isEqual(r, "data.email", positivePayload.email),
         [currentFeature + " login with correct value should have name property"]: (r) => isEqual(r, "data.name", userByPhone.name),
         [currentFeature + " login with correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
@@ -180,7 +178,7 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
     return isSuccess ? {
         accessToken: res.json().data.accessToken,
         phone: userByPhone.phone,
-        email: usr.email,
+        email: positivePayload.email,
         name: userByPhone.name,
         password: userByPhone.password
     } : null
