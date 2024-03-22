@@ -140,7 +140,7 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
 
         // Negative case, updating existing email from user that registered using email       
         res = testPostJson(route, {
-            email: userByEmail.Email,
+            email: userByEmail.email,
         }, userByEmailHeaders)
         check(res, {
             [currentFeature + " same email from user that registered using email should return 400"]: (r) => r.status === 400
@@ -148,7 +148,7 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
 
         // Negative case, updating existing email from user that registered using phone 
         res = testPostJson(route, {
-            email: userByEmail.Email,
+            email: userByEmail.email,
         }, userByPhoneHeaders)
         check(res, {
             [currentFeature + " same email from user that registered using phone should return 409"]: (r) => r.status === 409,
