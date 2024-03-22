@@ -141,9 +141,7 @@ export function generateUniqueName() {
  * @returns {import("k6/http").RefinedResponse} - k6 http response.
  */
 export function testGet(route, params, headersObj, options = []) {
-    const headers = options.includes("noContentType") ? Object.assign({}, headersObj) : Object.assign({ "Content-Type": "application/json" }, headersObj)
-
-    return http.get(route, params, { headers });
+    return http.get(route, params, { headers: headersObj });
 }
 
 /**
