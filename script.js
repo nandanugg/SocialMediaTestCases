@@ -70,6 +70,6 @@ export default function () {
   [userByPhone, userByEmail] = LinkCredential(userByPhone, userByEmail, true)
   if (!userByPhone || !userByEmail) return
 
-  // userByPhone = TestUpdateAccount(userByPhone, true)
-  // userByPhone = UploadTest(userByPhone, true)
+  userByPhone = TestUpdateAccount(userByPhone, true)
+  userByPhone = UploadTest(userByPhone, true)
 }
