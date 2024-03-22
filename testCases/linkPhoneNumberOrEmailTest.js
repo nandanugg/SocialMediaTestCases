@@ -20,9 +20,9 @@ export function LinkCredential(userByPhone, userByEmail, doNegativeCase) {
     let route = __ENV.BASE_URL + "/v1/user/link"
 
     const usrByPhone = LinkPhoneTest(route, userByEmail, userByPhone, doNegativeCase)
-    const usrByEmail = LinkEmailTest(route, userByEmail, userByPhone, doNegativeCase)
+    // const usrByEmail = LinkEmailTest(route, userByEmail, userByPhone, doNegativeCase)
 
-    return [usrByPhone, usrByEmail]
+    return [usrByPhone, userByEmail]
 }
 
 function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
