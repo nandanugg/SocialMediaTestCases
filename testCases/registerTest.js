@@ -67,6 +67,7 @@ function PhoneRegistrationTest(route, doNegativeCase) {
         })
     }
 
+    // Positive case, phone registration
     res = testPostJson(route, positivePayload)
     let isSuccess = check(res, {
         [currentFeature + " correct body should return 201 | " + JSON.stringify(positivePayload)]: (r) => r.status === 201,
@@ -112,6 +113,7 @@ function EmailRegistrationTests(route, doNegativeCase) {
         })
     }
 
+    // Positive case, email registration
     res = testPostJson(route, positivePayload)
     let isSuccess = check(res, {
         [currentFeature + " correct body should return 201 | " + JSON.stringify(positivePayload)]: (r) => r.status === 201,

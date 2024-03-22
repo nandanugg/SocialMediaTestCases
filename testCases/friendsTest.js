@@ -60,8 +60,8 @@ function TestGetFriends(route, user, doNegativeCase) {
     res = testGet(route, {
     }, headers)
     check(res, {
-        [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
-        [currentFeature + " correct param should have more than one data"]: (r) => {
+        [currentFeature + " search paramless should return 200"]: (r) => r.status === 200,
+        [currentFeature + " search paramless should have more than one data"]: (r) => {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length > 0
         },
@@ -73,12 +73,12 @@ function TestGetFriends(route, user, doNegativeCase) {
         offset: 0
     }, headers)
     check(res, {
-        [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
-        [currentFeature + " correct param should have only ten data"]: (r) => {
+        [currentFeature + " search with pagination should return 200"]: (r) => r.status === 200,
+        [currentFeature + " search with pagination should have only ten data"]: (r) => {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length == 10
         },
-        [currentFeature + " correct param should have correct createdAt format and ordered desc"]: (r) => {
+        [currentFeature + " search with pagination should have correct createdAt format and ordered desc"]: (r) => {
             const parsedRes = isExists(r, "data")
             if (!Array.isArray(parsedRes)) return false
 
@@ -104,13 +104,13 @@ function TestGetFriends(route, user, doNegativeCase) {
         orderBy: "asc"
     }, headers)
     check(res, {
-        [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
+        [currentFeature + " search with pagination and orderBy asc should return 200"]: (r) => r.status === 200,
         // TODO: insert a lot of user first before testing
-        [currentFeature + " correct param should have only ten data"]: (r) => {
+        [currentFeature + " search with pagination and orderBy asc should have only three data"]: (r) => {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length == 3
         },
-        [currentFeature + " correct param should have correct createdAt format and ordered asc"]: (r) => {
+        [currentFeature + " search with pagination and orderBy asc should have correct createdAt format and ordered asc"]: (r) => {
             const parsedRes = isExists(r, "data")
             if (!Array.isArray(parsedRes)) return false
 
@@ -137,12 +137,12 @@ function TestGetFriends(route, user, doNegativeCase) {
         sortBy: "friendCount"
     }, headers)
     check(res, {
-        [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
-        [currentFeature + " correct param should have only ten data"]: (r) => {
+        [currentFeature + " search with pagination orderBy asc, and sortBy friendCount should return 200"]: (r) => r.status === 200,
+        [currentFeature + " search with pagination orderBy asc, and sortBy friendCount should have only three data"]: (r) => {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length == 3
         },
-        [currentFeature + " correct param should have correct friendCount format and ordered asc"]: (r) => {
+        [currentFeature + " search with pagination orderBy asc, and sortBy friendCount should have correct friendCount format and ordered asc"]: (r) => {
             const parsedRes = isExists(r, "data")
             if (!Array.isArray(parsedRes)) return false
 
@@ -164,13 +164,13 @@ function TestGetFriends(route, user, doNegativeCase) {
         search: "s"
     }, headers)
     check(res, {
-        [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
+        [currentFeature + " search with pagination and keyword query should return 200"]: (r) => r.status === 200,
         // TODO: insert a lot of user first before testing
-        [currentFeature + " correct param should have only three data"]: (r) => {
+        [currentFeature + " search with pagination and keyword query should have only three data"]: (r) => {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length == 3
         },
-        [currentFeature + " correct param should have data that contains 's'"]: (r) => {
+        [currentFeature + " search with pagination and keyword query should have data that contains 's'"]: (r) => {
             const parsedRes = isExists(r, "data")
             if (!Array.isArray(parsedRes)) return false
 
@@ -231,7 +231,7 @@ function TestAddFriends(route, user, doNegativeCase) {
             userId: friend.userId
         }, headers)
         check(res, {
-            [currentFeature + 'correct body with correct userId should return 200 ']: (r) => r.status === 200,
+            [currentFeature + ' with correct userId should return 200 ']: (r) => r.status === 200,
         })
         user.friendsKv[friend.userId].added = true
     });
@@ -243,8 +243,8 @@ function TestAddFriends(route, user, doNegativeCase) {
         onlyFriend: true
     }, headers)
     check(res, {
-        [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
-        [currentFeature + " correct param should have the correct friends"]: (r) => {
+        [currentFeature + " get friends after adding friend should return 200"]: (r) => r.status === 200,
+        [currentFeature + " get friends after adding friend should have the correct friends"]: (r) => {
             const parsedRes = isExists(r, "data")
             if (!Array.isArray(parsedRes)) return false
 

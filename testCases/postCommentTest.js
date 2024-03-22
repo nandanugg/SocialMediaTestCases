@@ -71,8 +71,8 @@ function TestCommentPost(route, validPostIds, user, doNegativeCase) {
         search: searchQuery
     }, headers)
     check(res, {
-        [currentFeature + " correct param check added comment should return 200"]: (r) => r.status === 200,
-        [currentFeature + " correct param check added comment should have the post that already commented"]: (r) => {
+        [currentFeature + " get post after adding comment should return 200"]: (r) => r.status === 200,
+        [currentFeature + " get post after adding comment should have the post that already commented"]: (r) => {
             const parsedRes = isExists(r, "data")
             if (!(Array.isArray(parsedRes))) return false
 

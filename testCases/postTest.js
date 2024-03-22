@@ -76,8 +76,8 @@ function TestAddPost(route, user, doNegativeCase) {
         search: positivePayload.postInHtml
     }, headers)
     check(res, {
-        [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
-        [currentFeature + " correct param should have the post that already added"]: (r) => {
+        [currentFeature + " get post after posting should return 200"]: (r) => r.status === 200,
+        [currentFeature + " get post after posting should have the post that already added"]: (r) => {
             const parsedRes = isExists(r, "data")
             if (!(Array.isArray(parsedRes))) return false
 

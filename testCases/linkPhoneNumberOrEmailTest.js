@@ -90,11 +90,11 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         password: userByEmail.password
     })
     isSuccess = check(res, {
-        [currentFeature + " login with correct body should return 200"]: (r) => r.status === 200,
-        [currentFeature + " login with correct body should have phone property"]: (r) => isEqual(r, "data.phone", positivePayload.phone),
-        [currentFeature + " login with correct body should have email property"]: (r) => isEqual(r, "data.email", userByEmail.email),
-        [currentFeature + " login with correct body should have name property"]: (r) => isEqual(r, "data.name", userByEmail.name),
-        [currentFeature + " login with correct body should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
+        [currentFeature + " login with updated credential should return 200"]: (r) => r.status === 200,
+        [currentFeature + " login with updated credential should have phone property"]: (r) => isEqual(r, "data.phone", positivePayload.phone),
+        [currentFeature + " login with updated credential should have email property"]: (r) => isEqual(r, "data.email", userByEmail.email),
+        [currentFeature + " login with updated credential should have name property"]: (r) => isEqual(r, "data.name", userByEmail.name),
+        [currentFeature + " login with updated credential should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
 
     return isSuccess ? {
@@ -171,11 +171,11 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         password: userByPhone.password
     })
     isSuccess = check(res, {
-        [currentFeature + " login with correct body should return 200"]: (r) => r.status === 200,
-        [currentFeature + " login with correct body should have phone property"]: (r) => isEqual(r, "data.phone", userByPhone.phone),
-        [currentFeature + " login with correct body should have email property"]: (r) => isEqual(r, "data.email", positivePayload.email),
-        [currentFeature + " login with correct body should have name property"]: (r) => isEqual(r, "data.name", userByPhone.name),
-        [currentFeature + " login with correct body should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
+        [currentFeature + " login with updated credential should return 200"]: (r) => r.status === 200,
+        [currentFeature + " login with updated credential should have phone property"]: (r) => isEqual(r, "data.phone", userByPhone.phone),
+        [currentFeature + " login with updated credential should have email property"]: (r) => isEqual(r, "data.email", positivePayload.email),
+        [currentFeature + " login with updated credential should have name property"]: (r) => isEqual(r, "data.name", userByPhone.name),
+        [currentFeature + " login with updated credential should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
 
     return isSuccess ? {

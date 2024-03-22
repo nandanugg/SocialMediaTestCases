@@ -55,6 +55,7 @@ function PhoneLoginTest(route, user, doNegativeCase) {
                 [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
         })
+        // Negative case, login using not exists user
         res = testPostJson(route, {
             credentialType: "phone",
             credentialValue: generateRandomPhoneNumber(true),
@@ -65,6 +66,7 @@ function PhoneLoginTest(route, user, doNegativeCase) {
         })
     }
 
+    // Positive case, login
     res = testPostJson(route, positivePayload)
     let isSuccess = check(res, {
         [currentFeature + " correct body should return 200 | " + JSON.stringify(positivePayload)]: (r) => r.status === 200,
@@ -103,6 +105,7 @@ function EmailLoginTest(route, user, doNegativeCase) {
                 [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
         })
+        // Negative case, login using not existing user
         res = testPostJson(route, {
             credentialType: "email",
             credentialValue: generateRandomEmail(),
@@ -112,7 +115,7 @@ function EmailLoginTest(route, user, doNegativeCase) {
             [currentFeature + " non exist user should return 404"]: (r) => r.status === 404
         })
     }
-
+    // Positive case, login
     res = testPostJson(route, positivePayload)
     let isSuccess = check(res, {
         [currentFeature + " correct body should return 200 | " + JSON.stringify(positivePayload)]: (r) => r.status === 200,

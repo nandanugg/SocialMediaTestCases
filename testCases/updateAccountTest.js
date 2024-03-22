@@ -61,9 +61,9 @@ export function TestUpdateAccount(user, doNegativeCase) {
     })
     isSuccess = check(res, {
         [currentFeature + " login with correct body should return 200"]: (r) => r.status === 200,
-        [currentFeature + " login with correct body should have phone property"]: (r) => isEqual(r, "data.phone", user.phone),
-        [currentFeature + " login with correct body should have email property"]: (r) => isEqual(r, "data.email", user.email),
-        [currentFeature + " login with correct body should have name property"]: (r) => isEqual(r, "data.name", positivePayload.name),
+        [currentFeature + " login with correct body should have updated phone property"]: (r) => isEqual(r, "data.phone", user.phone),
+        [currentFeature + " login with correct body should have updated email property"]: (r) => isEqual(r, "data.email", user.email),
+        [currentFeature + " login with correct body should have updated name property"]: (r) => isEqual(r, "data.name", positivePayload.name),
         [currentFeature + " login with correct body should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
 
