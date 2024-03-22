@@ -118,8 +118,8 @@ function TestGetFriends(route, user, doNegativeCase) {
                 if (v.createdAt === undefined) return false
                 if (!isValidDate(v.createdAt)) return false
 
-                curDate = new Date(v.createdAt)
-                prevDate = new Date(parsedRes[i - 1].createdAt)
+                const curDate = new Date(v.createdAt)
+                const prevDate = new Date(parsedRes[i - 1].createdAt)
 
                 return prevDate.getTime() < curDate.getTime()
             })
