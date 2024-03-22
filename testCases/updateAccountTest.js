@@ -12,6 +12,7 @@ const updateAccountTestObjects = generateTestObjects({
 })
 
 export function TestUpdateAccount(user, doNegativeCase) {
+    let res
     let route = __ENV.BASE_URL + "/v1/user"
     const currentFeature = TEST_NAME
 
