@@ -13,7 +13,7 @@ export function UploadTest(user, doNegativeCase) {
     let res;
     let route = __ENV.BASE_URL + "/v1/image"
     const currentFeature = TEST_NAME
-    const headers = { "Authorization": "Bearer " + user.accessToken }
+    const headers = { "Authorization": "Bearer " + user.accessToken, "Content-Type": "multipart/form-data" }
 
     if (doNegativeCase) {
         // Negative case, empty auth
