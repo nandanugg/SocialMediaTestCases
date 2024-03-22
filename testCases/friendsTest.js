@@ -140,7 +140,7 @@ function TestGetFriends(route, user, doNegativeCase) {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length == 3
         },
-        [currentFeature + " correct param should have correct friendAt format and sorted asc"]: (r) => {
+        [currentFeature + " correct param should have correct friendCount format and sorted asc"]: (r) => {
             const parsedRes = isExists(r, "data")
             if (!Array.isArray(parsedRes)) return false
 
