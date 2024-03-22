@@ -141,7 +141,9 @@ export function generateUniqueName() {
  * @returns {import("k6/http").RefinedResponse} - k6 http response.
  */
 export function testGet(route, params, headersObj, options = []) {
-    const queryParams = new URLSearchParams(params).toString();
+    const queryParams = Object.entries(params)
+        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+        .join('&');
     const modifiedRoute = route + "?" + queryParams;
 
     return http.get(modifiedRoute, { headers: headersObj });
