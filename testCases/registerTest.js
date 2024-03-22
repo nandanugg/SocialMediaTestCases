@@ -59,17 +59,17 @@ function PhoneRegistrationTest(route, doNegativeCase) {
         registerPhoneTestObjects.forEach(payload => {
             res = testPostJson(route, payload)
             check(res, {
-                [currentFeature + ' wrong value should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
+                [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
         })
     }
 
     res = testPostJson(route, positivePayload)
     let isSuccess = check(res, {
-        [currentFeature + " correct value should return 201 | " + JSON.stringify(positivePayload)]: (r) => r.status === 201,
-        [currentFeature + " correct value should have phone property"]: (r) => isEqual(r, "data.phone", positivePayload.credentialValue),
-        [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", positivePayload.name),
-        [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
+        [currentFeature + " correct body should return 201 | " + JSON.stringify(positivePayload)]: (r) => r.status === 201,
+        [currentFeature + " correct body should have phone property"]: (r) => isEqual(r, "data.phone", positivePayload.credentialValue),
+        [currentFeature + " correct body should have name property"]: (r) => isEqual(r, "data.name", positivePayload.name),
+        [currentFeature + " correct body should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
     if (!isSuccess) {
         console.log("register failed", res.status, res.body)
@@ -103,17 +103,17 @@ function EmailRegistrationTests(route, doNegativeCase) {
         registerEmailTestObjects.forEach(payload => {
             res = testPostJson(route, payload)
             check(res, {
-                [currentFeature + ' wrong value should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
+                [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
         })
     }
 
     res = testPostJson(route, positivePayload)
     let isSuccess = check(res, {
-        [currentFeature + " correct value should return 201 | " + JSON.stringify(positivePayload)]: (r) => r.status === 201,
-        [currentFeature + " correct value should have email property"]: (r) => isEqual(r, "data.email", positivePayload.credentialValue),
-        [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", positivePayload.name),
-        [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
+        [currentFeature + " correct body should return 201 | " + JSON.stringify(positivePayload)]: (r) => r.status === 201,
+        [currentFeature + " correct body should have email property"]: (r) => isEqual(r, "data.email", positivePayload.credentialValue),
+        [currentFeature + " correct body should have name property"]: (r) => isEqual(r, "data.name", positivePayload.name),
+        [currentFeature + " correct body should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
     if (!isSuccess) {
         console.log("register failed", res.status, res.body)

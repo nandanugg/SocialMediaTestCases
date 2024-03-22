@@ -32,6 +32,15 @@ export function isExists(v, query) {
     }
     return false
 }
+/**
+ * validate ISO date string
+ * @param {string} dateString 
+ * @returns {Boolean}
+ */
+export function isValidDate(dateString) {
+    const date = new Date(dateString);
+    return !isNaN(date.getTime()); // getTime() returns NaN for 'Invalid Date'
+}
 
 /**
  * Checks whether k6 response has the data that the query asks and matches it
@@ -129,7 +138,7 @@ export function generateUniqueName() {
  * @param {object} params - The params that will be parsed into the URL.
  * @param {string[]} options - Additional options for the request. 
  *                             Available options: `"noContentType"`
- * @returns {Promise} - A Promise that resolves with the response from the server.
+ * @returns {import("k6/http").RefinedResponse} - k6 http response.
  */
 export function testGet(route, params, headersObj, options = []) {
     const headers = options.includes("noContentType") ? Object.assign({}, headersObj) : Object.assign({ "Content-Type": "application/json" }, headersObj)
@@ -144,7 +153,7 @@ export function testGet(route, params, headersObj, options = []) {
  * @param {object} headersObj - External headers other than `Content-Type`
  * @param {string[]} options - Additional options for the request. 
  *                             Available options: `"noContentType"`, `"plainBody"`
- * @returns {Promise} - A Promise that resolves with the response from the server.
+ * @returns {import("k6/http").RefinedResponse} - k6 http response.
  */
 export function testPostJson(route, body, headersObj, options = []) {
     const headers = options.includes("noContentType") ? Object.assign({}, headersObj) : Object.assign({ "Content-Type": "application/json" }, headersObj)
@@ -161,7 +170,7 @@ export function testPostJson(route, body, headersObj, options = []) {
  * @param {string[]} options - Additional options for the request. 
  *                             Available options: `"noContentType"`, `"plainBody"`
  * @param {object} headersObj - External headers other than `Content-Type`
- * @returns {Promise} - A Promise that resolves with the response from the server.
+ * @returns {import("k6/http").RefinedResponse} - k6 http response.
  */
 export function testPatchJson(route, body, headersObj, options = []) {
     const headers = options.includes("noContentType") ? Object.assign({}, headersObj) : Object.assign({ "Content-Type": "application/json" }, headersObj)

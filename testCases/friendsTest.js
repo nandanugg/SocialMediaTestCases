@@ -1,9 +1,9 @@
 import { check } from "k6";
-import { generateRandomEmail, generateTestObjects, generateRandomImageUrl, generateRandomPassword, generateRandomPhoneNumber, generateUniqueName, isExists, testGet, isEqual, testPatchJson, testPostJson } from "../helper.js";
+import { generateRandomEmail, generateTestObjects, generateRandomImageUrl, generateRandomPassword, generateRandomPhoneNumber, generateUniqueName, isExists, testGet, isEqual, testPatchJson, testPostJson, isValidDate } from "../helper.js";
 
 const TEST_NAME = "(friends test)"
 
-const friendTestObjects = generateTestObjects({
+const friendParamTestObjects = generateTestObjects({
     limit: { type: "number", min: 0 },
     offset: { type: "number", min: 0 },
     sortBy: { type: "string", enum: ["friendCount", "createdAt"] },
@@ -16,15 +16,25 @@ const friendTestObjects = generateTestObjects({
     orderBy: "asc",
     onlyFriend: false,
 })
+const friendAddTestObjects = generateTestObjects({
+    userId: { type: "string" },
+}, {
+    userId: "asdasd"
+})
 
 
 
 export function TestFriends(user, doNegativeCase) {
     let route = __ENV.BASE_URL + "/v1/friend"
-    const currentFeature = TEST_NAME
 
+
+    let usrWithFriends = TestGetFriends(route, user, doNegativeCase)
+    usrWithFriends = TestAddFriends(route, user, doNegativeCase)
+}
+function TestGetFriends(route, user, doNegativeCase) {
+    let res;
+    const currentFeature = TEST_NAME + "get friend"
     const headers = { "Authorization": "Bearer " + user.accessToken }
-
     if (doNegativeCase) {
         // Negative case, no auth
         res = testGet(route, {}, {})
@@ -32,62 +42,220 @@ export function TestFriends(user, doNegativeCase) {
             [currentFeature + " no auth should return 401"]: (r) => r.status === 401
         })
 
-        // Negative case, invalid payload
-        friendTestObjects.forEach(payload => {
+        // Negative case, invalid param
+        friendParamTestObjects.forEach(payload => {
             res = testGet(route, payload, headers)
             check(res, {
-                [currentFeature + ' wrong value should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
+                [currentFeature + ' wrong param should return 400 | ' + res.url]: (r) => r.status === 400,
             })
         })
     }
 
-    // Postive case, get by query
+    let friends = {}
+
+    // Positive case, search paramless
     res = testGet(route, {
-        search: "s"
     }, headers)
     check(res, {
-        [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
-        [currentFeature + " correct value should have more than one data"]: (r) => {
+        [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
+        [currentFeature + " correct param should have more than one data"]: (r) => {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length > 0
         },
     })
-    // Postiive case, pagination
+
+    // Postiive case, pagination and createdAt default sorting
     res = testGet(route, {
         limit: 10,
         offset: 0
     }, headers)
     check(res, {
-        [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
-        [currentFeature + " correct value should have only ten data"]: (r) => {
+        [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
+        [currentFeature + " correct param should have only ten data"]: (r) => {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length == 10
         },
+        [currentFeature + " correct param should have correct createdAt format and sorted desc"]: (r) => {
+            const parsedRes = isExists(r, "data")
+            if (!Array.isArray(parsedRes)) return false
 
+            return parsedRes.every((v, i) => {
+                friends[v.userId] = v
+                if (i == 0) return true
+                if (!isValidDate(v.createdAt)) return false
+
+                curDate = new Date(v.createdAt)
+                prevDate = new Date(parsedRes[i - 1].createdAt)
+
+                return prevDate.getTime() > curDate.getTime()
+            })
+
+        },
     })
 
 
-    // Positive case, login should give newly created data
+    // Postiive case, pagination and createdAt asc sorting
     res = testGet(route, {
-        credentialType: "email",
-        credentialValue: user.email,
-        password: user.password
+        limit: 3,
+        offset: 0,
+        orderBy: "asc"
+    }, headers)
+    check(res, {
+        [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
+        [currentFeature + " correct param should have only ten data"]: (r) => {
+            const parsedRes = isExists(r, "data")
+            return Array.isArray(parsedRes) && parsedRes.length == 3
+        },
+        [currentFeature + " correct param should have correct createdAt format and sorted asc"]: (r) => {
+            const parsedRes = isExists(r, "data")
+            if (!Array.isArray(parsedRes)) return false
+
+            return parsedRes.every((v, i) => {
+                friends[v.userId] = v
+                if (i == 0) return true
+                if (v.createdAt === undefined) return false
+                if (!isValidDate(v.createdAt)) return false
+
+                curDate = new Date(v.createdAt)
+                prevDate = new Date(parsedRes[i - 1].createdAt)
+
+                return prevDate.getTime() < curDate.getTime()
+            })
+
+        },
     })
-    isSuccess = check(res, {
-        [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
-        [currentFeature + " correct value should have phone property"]: (r) => isEqual(r, "data.phone", user.phone),
-        [currentFeature + " correct value should have email property"]: (r) => isEqual(r, "data.email", user.email),
-        [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", payload.name),
-        [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
+
+    // Postiive case, pagination and friendCount asc sorting
+    res = testGet(route, {
+        limit: 3,
+        offset: 0,
+        orderBy: "asc",
+        sortBy: "friendCount"
+    }, headers)
+    check(res, {
+        [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
+        [currentFeature + " correct param should have only ten data"]: (r) => {
+            const parsedRes = isExists(r, "data")
+            return Array.isArray(parsedRes) && parsedRes.length == 3
+        },
+        [currentFeature + " correct param should have correct friendAt format and sorted asc"]: (r) => {
+            const parsedRes = isExists(r, "data")
+            if (!Array.isArray(parsedRes)) return false
+
+            return parsedRes.every((v, i) => {
+                friends[v.userId] = v
+                if (i == 0) return true
+                if (v.friendCount === undefined) return false
+
+                return parsedRes[i - 1].friendCount <= v.friendCount
+            })
+
+        },
+    })
+
+    // Postiive case, pagination and search results
+    res = testGet(route, {
+        limit: 3,
+        offset: 0,
+        search: "s"
+    }, headers)
+    check(res, {
+        [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
+        [currentFeature + " correct param should have only ten data"]: (r) => {
+            const parsedRes = isExists(r, "data")
+            return Array.isArray(parsedRes) && parsedRes.length == 3
+        },
+        [currentFeature + " correct param should have s"]: (r) => {
+            const parsedRes = isExists(r, "data")
+            if (!Array.isArray(parsedRes)) return false
+
+            return parsedRes.every((v, i) => {
+                friends[v.userId] = v
+                if (v.name === undefined) return false
+
+                return v.name.includes("s") || v.name.includes("S")
+            })
+
+        },
     })
 
 
-    return isSuccess ? {
+    return {
         accessToken: res.json().data.accessToken,
         phone: user.phone,
         email: user.email,
-        name: payload.name,
+        name: user.name,
         password: user.password,
-        imageUrl: payload.imageUrl
-    } : null
+        imageUrls: user.imageUrls,
+        friends: friends
+    }
+}
+
+function TestAddFriends(route, user, doNegativeCase) {
+    let res;
+    const currentFeature = TEST_NAME + "add friend"
+    const headers = { "Authorization": "Bearer " + user.accessToken }
+    if (doNegativeCase) {
+        // Negative case, no auth
+        res = testPostJson(route, {}, {})
+        check(res, {
+            [currentFeature + " no auth should return 401"]: (r) => r.status === 401
+        })
+
+        // Negative case, invalid param
+        friendAddTestObjects.forEach(payload => {
+            res = testGet(route, payload, headers)
+            check(res, {
+                [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
+            })
+        })
+
+        // Negative case, not found user
+        res = testPostJson(route, {
+            userId: "asdadadsas"
+        }, headers)
+        check(res, {
+            [currentFeature + ' wrong body random userId should return 404 ']: (r) => r.status === 404,
+        })
+    }
+
+
+    // Positive case, add friend
+    Object.values(user.friends).forEach((friend, i) => {
+        res = testPostJson(route, {
+            userId: friend.userId
+        }, headers)
+        check(res, {
+            [currentFeature + 'correct body with correct userId should return 200 ']: (r) => r.status === 200,
+        })
+        user.friends[i.userId].added = true
+    });
+
+    // Positive case, get all friends that already added
+    res = testGet(route, {
+        limit: 1000,
+        offset: 0,
+        onlyFriend: true
+    }, headers)
+    check(res, {
+        [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
+        [currentFeature + " correct param should have the correct friends"]: (r) => {
+            const parsedRes = isExists(r, "data")
+            if (!Array.isArray(parsedRes)) return false
+
+            return parsedRes.every((v, i) => {
+                return user.friends[v.userId] !== undefined && user.friends[v.userId].added === true
+            })
+        },
+    })
+
+    return {
+        accessToken: res.json().data.accessToken,
+        phone: user.phone,
+        email: user.email,
+        name: user.name,
+        password: user.password,
+        imageUrls: user.imageUrls,
+        friends: friends
+    }
 }

@@ -40,7 +40,7 @@ export function TestUpdateAccount(user, doNegativeCase) {
         updateAccountTestObjects.forEach(payload => {
             res = testPatchJson(route, payload, headers)
             check(res, {
-                [currentFeature + ' wrong value should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
+                [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
         })
     }
@@ -48,7 +48,7 @@ export function TestUpdateAccount(user, doNegativeCase) {
     // Postiive case, updating phone
     res = testPatchJson(route, positivePayload, headers)
     let isSuccess = check(res, {
-        [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
+        [currentFeature + " correct body should return 200"]: (r) => r.status === 200,
     })
 
     // Positive case, login should give newly created data
@@ -58,11 +58,11 @@ export function TestUpdateAccount(user, doNegativeCase) {
         password: user.password
     })
     isSuccess = check(res, {
-        [currentFeature + " login with correct value should return 200"]: (r) => r.status === 200,
-        [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", user.phone),
-        [currentFeature + " login with correct value should have email property"]: (r) => isEqual(r, "data.email", user.email),
-        [currentFeature + " login with correct value should have name property"]: (r) => isEqual(r, "data.name", positivePayload.name),
-        [currentFeature + " login with correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
+        [currentFeature + " login with correct body should return 200"]: (r) => r.status === 200,
+        [currentFeature + " login with correct body should have phone property"]: (r) => isEqual(r, "data.phone", user.phone),
+        [currentFeature + " login with correct body should have email property"]: (r) => isEqual(r, "data.email", user.email),
+        [currentFeature + " login with correct body should have name property"]: (r) => isEqual(r, "data.name", positivePayload.name),
+        [currentFeature + " login with correct body should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
 
 
