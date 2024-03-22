@@ -179,9 +179,9 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
 
     return isSuccess ? {
         accessToken: res.json().data.accessToken,
-        phone: usrByPhone.phone,
+        phone: userByPhone.phone,
         email: usr.email,
-        name: userByEmail.name,
-        password: userByEmail.password
+        name: userByPhone.name,
+        password: userByPhone.password
     } : null
 }
