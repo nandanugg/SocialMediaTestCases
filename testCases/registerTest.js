@@ -1,4 +1,4 @@
-import { check } from 'k6';
+import { check, sleep } from 'k6';
 import { generateTestObjects, generateUniqueName, generateRandomPassword, generateUniqueUsername, isEqual, isExists, testPostJson, generateRandomPhoneNumber, generateRandomEmail } from "../helper.js";
 
 const registerPhoneTestObjects = generateTestObjects({
@@ -41,6 +41,7 @@ export function RegistrationTest(doNegativeCase) {
     const usrByPhone = PhoneRegistrationTest(route, doNegativeCase)
     const usrByEmail = EmailRegistrationTests(route, doNegativeCase)
 
+    sleep(3)
     return [usrByPhone, usrByEmail]
 }
 

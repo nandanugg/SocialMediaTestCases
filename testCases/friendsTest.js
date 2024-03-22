@@ -28,7 +28,7 @@ export function TestFriends(user, doNegativeCase) {
     let route = __ENV.BASE_URL + "/v1/friend"
 
     let usrWithFriends = TestGetFriends(route, user, doNegativeCase)
-    usrWithFriends = TestAddFriends(route, user, doNegativeCase)
+    usrWithFriends = TestAddFriends(route, usrWithFriends, doNegativeCase)
 
     return usrWithFriends
 }
@@ -90,7 +90,7 @@ function TestGetFriends(route, user, doNegativeCase) {
                 const curDate = new Date(v.createdAt)
                 const prevDate = new Date(parsedRes[i - 1].createdAt)
 
-                return prevDate.getTime() > curDate.getTime()
+                return prevDate.getTime() >= curDate.getTime()
             })
         },
     })
@@ -121,7 +121,7 @@ function TestGetFriends(route, user, doNegativeCase) {
                 const curDate = new Date(v.createdAt)
                 const prevDate = new Date(parsedRes[i - 1].createdAt)
 
-                return prevDate.getTime() < curDate.getTime()
+                return prevDate.getTime() <= curDate.getTime()
             })
 
         },
@@ -163,11 +163,11 @@ function TestGetFriends(route, user, doNegativeCase) {
     }, headers)
     check(res, {
         [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
-        [currentFeature + " correct param should have only ten data"]: (r) => {
+        [currentFeature + " correct param should have only three data"]: (r) => {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length == 3
         },
-        [currentFeature + " correct param should have s"]: (r) => {
+        [currentFeature + " correct param should have data that contains 's'"]: (r) => {
             const parsedRes = isExists(r, "data")
             if (!Array.isArray(parsedRes)) return false
 
@@ -206,7 +206,7 @@ function TestAddFriends(route, user, doNegativeCase) {
 
         // Negative case, invalid param
         friendAddTestObjects.forEach(payload => {
-            res = testGet(route, payload, headers)
+            res = testPostJson(route, payload, headers)
             check(res, {
                 [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
