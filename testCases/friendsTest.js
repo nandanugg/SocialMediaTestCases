@@ -65,6 +65,7 @@ function TestGetFriends(route, user, doNegativeCase) {
             return Array.isArray(parsedRes) && parsedRes.length > 0
         },
     })
+    console.log(res.headers, res.url);
 
     // Postiive case, pagination and createdAt default sorting
     res = testGet(route, {
