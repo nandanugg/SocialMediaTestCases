@@ -2,6 +2,7 @@
 
 ### Prerequisites
 - [K6](https://k6.io/docs/get-started/installation/)
+- A linux environment (WSL / MacOS should be fine)
 
 
 ### Environment Variables
