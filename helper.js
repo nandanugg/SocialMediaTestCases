@@ -50,7 +50,7 @@ export function isEqual(v, query, expected) {
 }
 
 export function generateRandomImageUrl() {
-    return `${generateRandomDomain}/image.png`
+    return `${generateRandomDomain()}/image.png`
 }
 
 export function generateRandomPhoneNumber(addPlusPrefix) {
