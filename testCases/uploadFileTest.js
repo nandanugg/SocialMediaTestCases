@@ -22,14 +22,14 @@ export function UploadTest(user, doNegativeCase) {
             [currentFeature + "post upload file empty auth should return 401"]: (v) => v.status === 401
         })
         // Negative case, empty file 
-        res = http.post(route, {}, headers);
+        res = http.post(route, {}, { headers });
         check(res, {
             [currentFeature + "post upload file empty file should return 400"]: (v) => v.status === 400
         })
     }
 
     // Positive case, upload file
-    res = http.post(route, payload, headers);
+    res = http.post(route, payload, { headers });
     console.log("upload file headers", res.headers)
     let isSuccess = check(res, {
         [currentFeature + "correct file should return 200"]: (v) => v.status === 200,
