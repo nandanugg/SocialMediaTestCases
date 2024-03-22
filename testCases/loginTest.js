@@ -79,8 +79,8 @@ function PhoneLoginTest(route, user, doNegativeCase) {
         accessToken: res.json().data.accessToken,
         phone: usr.credentialValue,
         email: "",
-        name: usr.name,
-        password: usr.password
+        name: user.name,
+        password: user.password
     } : null
 
 
@@ -126,8 +126,8 @@ function EmailLoginTest(route, user, doNegativeCase) {
         accessToken: res.json().data.accessToken,
         phone: "",
         email: usr.credentialValue,
-        name: usr.name,
-        password: usr.password
+        name: user.name,
+        password: user.password
     } : null
 
 }

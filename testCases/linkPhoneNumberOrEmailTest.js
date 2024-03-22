@@ -95,8 +95,6 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         [currentFeature + " login with correct value should have name property"]: (r) => isEqual(r, "data.name", userByEmail.name),
         [currentFeature + " login with correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
-    console.log("login after link:", p, res.body, userByEmail)
-
 
     return isSuccess ? {
         accessToken: res.json().data.accessToken,
@@ -178,8 +176,6 @@ function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase) {
         [currentFeature + " login with correct value should have name property"]: (r) => isEqual(r, "data.name", userByPhone.name),
         [currentFeature + " login with correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
-    console.log("login after link:", p, res.body, userByPhone)
-
 
     return isSuccess ? {
         accessToken: res.json().data.accessToken,
