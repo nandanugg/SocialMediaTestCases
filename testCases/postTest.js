@@ -148,7 +148,6 @@ function TestGetPost(route, user, doNegativeCase) {
                 if (v.post.createdAt === undefined) return false
                 if (!isValidDate(v.post.createdAt)) return false
 
-
                 const curDate = new Date(v.post.createdAt)
                 const prevDate = new Date(parsedRes[i - 1].post.createdAt)
 
@@ -197,7 +196,7 @@ function TestGetPost(route, user, doNegativeCase) {
                 const prevDate = new Date(parsedRes[i - 1].post.createdAt)
 
                 postKv[v.postId] = v
-                return prevDate.getTime() <= curDate.getTime()
+                return prevDate.getTime() >= curDate.getTime()
             })
         },
         [currentFeature + " correct param should have " + tagsDictionary[0] + " tags"]: (r) => {
