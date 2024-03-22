@@ -1,5 +1,5 @@
 import { check } from "k6";
-import { generateRandomEmail, generateTestObjects, generateRandomImageUrl, generateRandomPassword, generateRandomPhoneNumber, generateUniqueName, isExists, testGet, isEqual, testPatchJson, testPostJson, isValidDate } from "../helper.js";
+import { generateTestObjects, isExists, testGet, testPostJson, isValidDate } from "../helper.js";
 
 const TEST_NAME = "(friends test)"
 
@@ -25,6 +25,7 @@ const friendAddTestObjects = generateTestObjects({
 
 
 export function TestFriends(user, doNegativeCase) {
+    // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/friend"
 
     let usrWithFriends = TestGetFriends(route, user, doNegativeCase)
@@ -171,7 +172,7 @@ function TestGetFriends(route, user, doNegativeCase) {
             const parsedRes = isExists(r, "data")
             if (!Array.isArray(parsedRes)) return false
 
-            return parsedRes.every((v, i) => {
+            return parsedRes.every((v) => {
                 friendsKv[v.userId] = v
                 if (v.name === undefined) return false
 
@@ -183,7 +184,7 @@ function TestGetFriends(route, user, doNegativeCase) {
 
 
     return {
-        accessToken: res.json().data.accessToken,
+        accessToken: user.accessToken,
         phone: user.phone,
         email: user.email,
         name: user.name,
@@ -245,14 +246,14 @@ function TestAddFriends(route, user, doNegativeCase) {
             const parsedRes = isExists(r, "data")
             if (!Array.isArray(parsedRes)) return false
 
-            return parsedRes.every((v, i) => {
+            return parsedRes.every((v) => {
                 return user.friendsKv[v.userId] !== undefined && user.friendsKv[v.userId].added === true
             })
         },
     })
 
     return {
-        accessToken: res.json().data.accessToken,
+        accessToken: user.accessToken,
         phone: user.phone,
         email: user.email,
         name: user.name,

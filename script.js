@@ -1,5 +1,3 @@
-import http from 'k6/http';
-import { sleep } from 'k6';
 import { RegistrationTest } from './testCases/registerTest.js';
 import { LoginTest } from './testCases/loginTest.js';
 import { TestUpdateAccount } from './testCases/updateAccountTest.js';

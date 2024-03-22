@@ -1,5 +1,5 @@
 import { check } from "k6";
-import { generateRandomEmail, generateTestObjects, generateRandomImageUrl, isEqual, generateRandomPassword, generateRandomPhoneNumber, generateUniqueName, testPatchJson, testPostJson, isExists } from "../helper.js";
+import { generateTestObjects, generateRandomImageUrl, isEqual, generateUniqueName, testPatchJson, testPostJson, isExists } from "../helper.js";
 
 const TEST_NAME = "(update account test)"
 
@@ -13,7 +13,9 @@ const updateAccountTestObjects = generateTestObjects({
 
 export function TestUpdateAccount(user, doNegativeCase) {
     let res
+    // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/user"
+    // eslint-disable-next-line no-undef
     let loginRoute = __ENV.BASE_URL + "/v1/user/login"
     const currentFeature = TEST_NAME
 

@@ -1,5 +1,5 @@
 import { check, sleep } from 'k6';
-import { generateTestObjects, generateUniqueName, generateRandomPassword, generateUniqueUsername, isEqual, isExists, testPostJson, generateRandomPhoneNumber, generateRandomEmail } from "../helper.js";
+import { generateTestObjects, generateUniqueName, generateRandomPassword, isEqual, isExists, testPostJson, generateRandomPhoneNumber, generateRandomEmail } from "../helper.js";
 
 const registerPhoneTestObjects = generateTestObjects({
     credentialType: { type: "string", enum: ["phone"], notNull: true },
@@ -30,6 +30,7 @@ const TEST_NAME = "(register test)"
 
 export function RegistrationTest(doNegativeCase) {
     let res;
+    // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/user/register"
     if (doNegativeCase) {
         res = testPostJson(route, {}, {}, ["noContentType"])

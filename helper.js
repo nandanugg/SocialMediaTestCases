@@ -140,7 +140,7 @@ export function generateUniqueName() {
  *                             Available options: `"noContentType"`
  * @returns {import("k6/http").RefinedResponse} - k6 http response.
  */
-export function testGet(route, params, headersObj, options = []) {
+export function testGet(route, params, headersObj) {
     const queryParams = Object.entries(params)
         .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
         .join('&');
