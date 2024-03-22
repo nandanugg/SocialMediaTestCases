@@ -30,7 +30,7 @@ export function UploadTest(user, doNegativeCase) {
 
     // Positive case, upload file
     res = http.post(route, payload, headers);
-    console.log("upload file", payload, headers)
+    console.log("upload file headers", res.headers)
     let isSuccess = check(res, {
         [currentFeature + "correct file should return 200"]: (v) => v.status === 200,
         [currentFeature + "correct file should have imageUrl"]: (v) => isExists(v, "data.imageUrl"),
@@ -38,7 +38,7 @@ export function UploadTest(user, doNegativeCase) {
 
     if (!isSuccess) return
 
-    user.imageUrls.push(res.json().imageUrl)
+    user.imageUrls.push(res.json().data.imageUrl)
 
     return user
 }
