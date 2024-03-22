@@ -57,12 +57,13 @@ export function TestUpdateAccount(user, doNegativeCase) {
         credentialValue: user.email,
         password: user.password
     })
+    console.log(currentFeature, res.body)
     isSuccess = check(res, {
-        [currentFeature + " correct value should return 200"]: (r) => r.status === 200,
-        [currentFeature + " correct value should have phone property"]: (r) => isEqual(r, "data.phone", user.phone),
-        [currentFeature + " correct value should have email property"]: (r) => isEqual(r, "data.email", user.email),
-        [currentFeature + " correct value should have name property"]: (r) => isEqual(r, "data.name", payload.name),
-        [currentFeature + " correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
+        [currentFeature + " login with correct value should return 200"]: (r) => r.status === 200,
+        [currentFeature + " login with correct value should have phone property"]: (r) => isEqual(r, "data.phone", user.phone),
+        [currentFeature + " login with correct value should have email property"]: (r) => isEqual(r, "data.email", user.email),
+        [currentFeature + " login with correct value should have name property"]: (r) => isEqual(r, "data.name", payload.name),
+        [currentFeature + " login with correct value should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
 
 
