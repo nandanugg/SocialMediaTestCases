@@ -24,30 +24,30 @@ const friendAddTestObjects = generateTestObjects({
 
 
 
-export function TestFriends(user, doNegativeCase) {
+export function TestFriends(user, doNegativeCase, tags = {}) {
     // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/friend"
 
-    let usrWithFriends = TestGetFriends(route, user, doNegativeCase)
-    usrWithFriends = TestAddFriends(route, usrWithFriends, doNegativeCase)
+    let usrWithFriends = TestGetFriends(route, user, doNegativeCase, tags)
+    usrWithFriends = TestAddFriends(route, usrWithFriends, doNegativeCase, tags)
 
     return usrWithFriends
 }
 
-function TestGetFriends(route, user, doNegativeCase) {
+function TestGetFriends(route, user, doNegativeCase, tags = {}) {
     let res;
     const currentFeature = TEST_NAME + "get friend"
     const headers = { "Authorization": "Bearer " + user.accessToken }
     if (doNegativeCase) {
         // Negative case, no auth
-        res = testGet(route, {}, {})
+        res = testGet(route, {}, {}, tags)
         check(res, {
             [currentFeature + " no auth should return 401"]: (r) => r.status === 401
         })
 
         // Negative case, invalid param
         friendParamTestObjects.forEach(payload => {
-            res = testGet(route, payload, headers)
+            res = testGet(route, payload, headers, tags)
             check(res, {
                 [currentFeature + ' wrong param should return 400 | ' + res.url]: (r) => r.status === 400,
             })
@@ -58,7 +58,7 @@ function TestGetFriends(route, user, doNegativeCase) {
 
     // Positive case, search paramless
     res = testGet(route, {
-    }, headers)
+    }, headers, tags)
     check(res, {
         [currentFeature + " search paramless should return 200"]: (r) => r.status === 200,
         [currentFeature + " search paramless should have more than one data"]: (r) => {
@@ -71,7 +71,7 @@ function TestGetFriends(route, user, doNegativeCase) {
     res = testGet(route, {
         limit: 10,
         offset: 0
-    }, headers)
+    }, headers, tags)
     check(res, {
         [currentFeature + " search with pagination should return 200"]: (r) => r.status === 200,
         [currentFeature + " search with pagination should have only ten data"]: (r) => {
@@ -102,7 +102,7 @@ function TestGetFriends(route, user, doNegativeCase) {
         limit: 3,
         offset: 0,
         orderBy: "asc"
-    }, headers)
+    }, headers, tags)
     check(res, {
         [currentFeature + " search with pagination and orderBy asc should return 200"]: (r) => r.status === 200,
         // TODO: insert a lot of user first before testing
@@ -135,7 +135,7 @@ function TestGetFriends(route, user, doNegativeCase) {
         offset: 0,
         orderBy: "asc",
         sortBy: "friendCount"
-    }, headers)
+    }, headers, tags)
     check(res, {
         [currentFeature + " search with pagination orderBy asc, and sortBy friendCount should return 200"]: (r) => r.status === 200,
         [currentFeature + " search with pagination orderBy asc, and sortBy friendCount should have only three data"]: (r) => {
@@ -162,7 +162,7 @@ function TestGetFriends(route, user, doNegativeCase) {
         limit: 3,
         offset: 0,
         search: "s"
-    }, headers)
+    }, headers, tags)
     check(res, {
         [currentFeature + " search with pagination and keyword query should return 200"]: (r) => r.status === 200,
         // TODO: insert a lot of user first before testing
@@ -196,20 +196,20 @@ function TestGetFriends(route, user, doNegativeCase) {
     }
 }
 
-function TestAddFriends(route, user, doNegativeCase) {
+function TestAddFriends(route, user, doNegativeCase, tags = {}) {
     let res;
     const currentFeature = TEST_NAME + "add friend"
     const headers = { "Authorization": "Bearer " + user.accessToken }
     if (doNegativeCase) {
         // Negative case, no auth
-        res = testPostJson(route, {}, {})
+        res = testPostJson(route, {}, {}, tags)
         check(res, {
             [currentFeature + " no auth should return 401"]: (r) => r.status === 401
         })
 
         // Negative case, invalid body 
         friendAddTestObjects.forEach(payload => {
-            res = testPostJson(route, payload, headers)
+            res = testPostJson(route, payload, headers, tags)
             check(res, {
                 [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
@@ -218,7 +218,7 @@ function TestAddFriends(route, user, doNegativeCase) {
         // Negative case, not found user
         res = testPostJson(route, {
             userId: "asdadadsas"
-        }, headers)
+        }, headers, tags)
         check(res, {
             [currentFeature + ' wrong body random userId should return 404 ']: (r) => r.status === 404,
         })
@@ -229,7 +229,7 @@ function TestAddFriends(route, user, doNegativeCase) {
     Object.values(user.friendsKv).forEach((friend) => {
         res = testPostJson(route, {
             userId: friend.userId
-        }, headers)
+        }, headers, tags)
         check(res, {
             [currentFeature + ' with correct userId should return 200 ']: (r) => r.status === 200,
         })
@@ -241,7 +241,7 @@ function TestAddFriends(route, user, doNegativeCase) {
         limit: 1000,
         offset: 0,
         onlyFriend: true
-    }, headers)
+    }, headers, tags)
     check(res, {
         [currentFeature + " get friends after adding friend should return 200"]: (r) => r.status === 200,
         [currentFeature + " get friends after adding friend should have the correct friends"]: (r) => {

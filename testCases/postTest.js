@@ -21,17 +21,17 @@ const addPostTestObjects = generateTestObjects({
     offset: 0,
 })
 
-export function TestPost(user, doNegativeCase) {
+export function TestPost(user, doNegativeCase, tags = {}) {
     // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/post"
 
-    let usrWithFriends = TestAddPost(route, user, doNegativeCase)
-    usrWithFriends = TestGetPost(route, usrWithFriends, doNegativeCase)
+    let usrWithFriends = TestAddPost(route, user, doNegativeCase, tags)
+    usrWithFriends = TestGetPost(route, usrWithFriends, doNegativeCase,)
 
     return usrWithFriends
 }
 
-function TestAddPost(route, user, doNegativeCase) {
+function TestAddPost(route, user, doNegativeCase, tags = {}) {
     let res;
     const postKv = Object.assign({}, user.userPostKv)
     const currentFeature = TEST_NAME + "add post"
@@ -48,14 +48,14 @@ function TestAddPost(route, user, doNegativeCase) {
 
     if (doNegativeCase) {
         // Negative case, no auth
-        res = testPostJson(route, {}, {})
+        res = testPostJson(route, {}, {}, tags)
         check(res, {
             [currentFeature + " no auth should return 401"]: (r) => r.status === 401
         })
 
         // Negative case, invalid body
         postTestObjects.forEach(payload => {
-            res = testPostJson(route, payload, headers)
+            res = testPostJson(route, payload, headers, tags)
             check(res, {
                 [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
@@ -63,7 +63,7 @@ function TestAddPost(route, user, doNegativeCase) {
     }
 
     // Positive case, add post
-    res = testPostJson(route, positivePayload, headers)
+    res = testPostJson(route, positivePayload, headers, tags)
     check(res, {
         [currentFeature + " correct body should return 200"]: (r) => r.status === 200
         ,
@@ -74,7 +74,7 @@ function TestAddPost(route, user, doNegativeCase) {
         limit: 10,
         offset: 0,
         search: positivePayload.postInHtml
-    }, headers)
+    }, headers, tags)
     check(res, {
         [currentFeature + " get post after posting should return 200"]: (r) => r.status === 200,
         [currentFeature + " get post after posting should have the post that already added"]: (r) => {
@@ -104,21 +104,21 @@ function TestAddPost(route, user, doNegativeCase) {
     }
 }
 
-function TestGetPost(route, user, doNegativeCase) {
+function TestGetPost(route, user, doNegativeCase, tags = {}) {
     let res;
     const currentFeature = TEST_NAME + "get post"
     const headers = { "Authorization": "Bearer " + user.accessToken }
     const postKv = {}
     if (doNegativeCase) {
         // Negative case, no auth
-        res = testGet(route, {}, {})
+        res = testGet(route, {}, {}, tags)
         check(res, {
             [currentFeature + " no auth should return 401"]: (r) => r.status === 401
         })
 
         // Negative case, invalid param
         addPostTestObjects.forEach(payload => {
-            res = testGet(route, payload, headers)
+            res = testGet(route, payload, headers, tags)
             check(res, {
                 [currentFeature + ' wrong param should return 400 | ' + res.url]: (r) => r.status === 400,
             })
@@ -130,7 +130,7 @@ function TestGetPost(route, user, doNegativeCase) {
         limit: 3,
         offset: 0,
         search: "s"
-    }, headers)
+    }, headers, tags)
     check(res, {
         [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
         [currentFeature + " correct param should have only three data"]: (r) => {
@@ -174,7 +174,7 @@ function TestGetPost(route, user, doNegativeCase) {
         limit: 3,
         offset: 0,
         searchTag: tagsDictionary[0]
-    }, headers)
+    }, headers, tags)
     check(res, {
         [currentFeature + " correct param should return 200"]: (r) => r.status === 200,
         [currentFeature + " correct param should have only three data"]: (r) => {

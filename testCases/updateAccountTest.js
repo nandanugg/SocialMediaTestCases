@@ -11,7 +11,7 @@ const updateAccountTestObjects = generateTestObjects({
     name: "shubaba"
 })
 
-export function TestUpdateAccount(user, doNegativeCase) {
+export function TestUpdateAccount(user, doNegativeCase, tags = {}) {
     let res
     // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/user"
@@ -27,20 +27,20 @@ export function TestUpdateAccount(user, doNegativeCase) {
 
     if (doNegativeCase) {
         // Negative case, no auth
-        res = testPatchJson(route, {}, {})
+        res = testPatchJson(route, {}, {}, tags)
         check(res, {
             [currentFeature + " no auth should return 401"]: (r) => r.status === 401
         })
 
         // Negative case, no body
-        res = testPatchJson(route, {}, headers, ["noContentType"])
+        res = testPatchJson(route, {}, headers, tags, ["noContentType"])
         check(res, {
             [currentFeature + " no body should return 400"]: (r) => r.status === 400
         })
 
         // Negative case, invalid body
         updateAccountTestObjects.forEach(payload => {
-            res = testPatchJson(route, payload, headers)
+            res = testPatchJson(route, payload, headers, tags)
             check(res, {
                 [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
@@ -48,7 +48,7 @@ export function TestUpdateAccount(user, doNegativeCase) {
     }
 
     // Postiive case, updating phone
-    res = testPatchJson(route, positivePayload, headers)
+    res = testPatchJson(route, positivePayload, headers, tags)
     let isSuccess = check(res, {
         [currentFeature + " correct body should return 200"]: (r) => r.status === 200,
     })
@@ -58,7 +58,7 @@ export function TestUpdateAccount(user, doNegativeCase) {
         credentialType: "email",
         credentialValue: user.email,
         password: user.password
-    })
+    }, {}, tags)
     isSuccess = check(res, {
         [currentFeature + " login with correct body should return 200"]: (r) => r.status === 200,
         [currentFeature + " login with correct body should have updated phone property"]: (r) => isEqual(r, "data.phone", user.phone),

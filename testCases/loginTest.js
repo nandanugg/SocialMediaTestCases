@@ -24,12 +24,12 @@ const registerEmailTestObjects = generateTestObjects({
 })
 
 
-export function LoginTest(userByPhone, userByEmail, doNegativeCase) {
+export function LoginTest(userByPhone, userByEmail, doNegativeCase, tags = {}) {
     let res;
     // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/user/login"
     if (doNegativeCase) {
-        res = testPostJson(route, {}, {}, ["noContentType"])
+        res = testPostJson(route, {}, {}, tags, ["noContentType"])
         check(res, {
             [TEST_NAME + "post login no body should return 400|"]: (r) => r.status === 400
         })
@@ -39,7 +39,7 @@ export function LoginTest(userByPhone, userByEmail, doNegativeCase) {
     return [usrByPhone, usrByEmail]
 }
 
-function PhoneLoginTest(route, user, doNegativeCase) {
+function PhoneLoginTest(route, user, doNegativeCase, tags = {}) {
     let res
     const currentFeature = TEST_NAME + "post login phone"
     const positivePayload = {
@@ -50,7 +50,7 @@ function PhoneLoginTest(route, user, doNegativeCase) {
     if (doNegativeCase) {
         // Negative case, invalid body
         registerPhoneTestObjects.forEach(payload => {
-            res = testPostJson(route, payload)
+            res = testPostJson(route, payload, {}, tags)
             check(res, {
                 [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
@@ -60,14 +60,14 @@ function PhoneLoginTest(route, user, doNegativeCase) {
             credentialType: "phone",
             credentialValue: generateRandomPhoneNumber(true),
             password: generateRandomPassword()
-        })
+        }, {}, tags)
         check(res, {
             [currentFeature + " non exist user should return 404"]: (r) => r.status === 404
         })
     }
 
     // Positive case, login
-    res = testPostJson(route, positivePayload)
+    res = testPostJson(route, positivePayload, {}, tags)
     let isSuccess = check(res, {
         [currentFeature + " correct body should return 200 | " + JSON.stringify(positivePayload)]: (r) => r.status === 200,
         [currentFeature + " correct body should have phone property"]: (r) => isEqual(r, "data.phone", user.phone),
@@ -89,7 +89,7 @@ function PhoneLoginTest(route, user, doNegativeCase) {
 
 
 }
-function EmailLoginTest(route, user, doNegativeCase) {
+function EmailLoginTest(route, user, doNegativeCase, tags = {}) {
     let res
     const currentFeature = TEST_NAME + "post login email"
     const positivePayload = {
@@ -100,7 +100,7 @@ function EmailLoginTest(route, user, doNegativeCase) {
     if (doNegativeCase) {
         // Negative case, invalid body
         registerEmailTestObjects.forEach(payload => {
-            res = testPostJson(route, payload)
+            res = testPostJson(route, payload, {}, tags)
             check(res, {
                 [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
@@ -110,13 +110,13 @@ function EmailLoginTest(route, user, doNegativeCase) {
             credentialType: "email",
             credentialValue: generateRandomEmail(),
             password: generateRandomPassword()
-        })
+        }, {}, tags)
         check(res, {
             [currentFeature + " non exist user should return 404"]: (r) => r.status === 404
         })
     }
     // Positive case, login
-    res = testPostJson(route, positivePayload)
+    res = testPostJson(route, positivePayload, {}, tags)
     let isSuccess = check(res, {
         [currentFeature + " correct body should return 200 | " + JSON.stringify(positivePayload)]: (r) => r.status === 200,
         [currentFeature + " correct body should have email property"]: (r) => isEqual(r, "data.email", user.email),

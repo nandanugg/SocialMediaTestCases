@@ -28,12 +28,12 @@ const registerEmailTestObjects = generateTestObjects({
 
 const TEST_NAME = "(register test)"
 
-export function RegistrationTest(doNegativeCase) {
+export function RegistrationTest(doNegativeCase, tags = {}) {
     let res;
     // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/user/register"
     if (doNegativeCase) {
-        res = testPostJson(route, {}, {}, ["noContentType"])
+        res = testPostJson(route, {}, {}, tags, ["noContentType"])
         check(res, {
             [TEST_NAME + "post register no body should return 400"]: (r) => r.status === 400
         })
@@ -47,7 +47,7 @@ export function RegistrationTest(doNegativeCase) {
 }
 
 
-function PhoneRegistrationTest(route, doNegativeCase) {
+function PhoneRegistrationTest(route, doNegativeCase, tags = {}) {
     let res
     const currentFeature = TEST_NAME + "post register phone"
     const positivePayload = {
@@ -60,7 +60,7 @@ function PhoneRegistrationTest(route, doNegativeCase) {
     if (doNegativeCase) {
         // Negative case, invalid body
         registerPhoneTestObjects.forEach(payload => {
-            res = testPostJson(route, payload)
+            res = testPostJson(route, payload, {}, tags)
             check(res, {
                 [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
@@ -68,7 +68,7 @@ function PhoneRegistrationTest(route, doNegativeCase) {
     }
 
     // Positive case, phone registration
-    res = testPostJson(route, positivePayload)
+    res = testPostJson(route, positivePayload, {}, tags)
     let isSuccess = check(res, {
         [currentFeature + " correct body should return 201 | " + JSON.stringify(positivePayload)]: (r) => r.status === 201,
         [currentFeature + " correct body should have phone property"]: (r) => isEqual(r, "data.phone", positivePayload.credentialValue),
@@ -80,7 +80,7 @@ function PhoneRegistrationTest(route, doNegativeCase) {
     }
 
     if (doNegativeCase && isSuccess) {
-        const failedRes = testPostJson(route, positivePayload)
+        const failedRes = testPostJson(route, positivePayload, {}, tags)
         isSuccess = check(failedRes, {
             [currentFeature + " duplicate user should return 409"]: (r) => r.status === 409
         })
@@ -93,7 +93,7 @@ function PhoneRegistrationTest(route, doNegativeCase) {
         password: positivePayload.password
     } : null
 }
-function EmailRegistrationTests(route, doNegativeCase) {
+function EmailRegistrationTests(route, doNegativeCase, tags = {}) {
     let res
     const currentFeature = TEST_NAME + "post register email"
     const positivePayload = {
@@ -106,7 +106,7 @@ function EmailRegistrationTests(route, doNegativeCase) {
     if (doNegativeCase) {
         // Negative case, invalid body
         registerEmailTestObjects.forEach(payload => {
-            res = testPostJson(route, payload)
+            res = testPostJson(route, payload, {}, tags)
             check(res, {
                 [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
@@ -114,7 +114,7 @@ function EmailRegistrationTests(route, doNegativeCase) {
     }
 
     // Positive case, email registration
-    res = testPostJson(route, positivePayload)
+    res = testPostJson(route, positivePayload, {}, tags)
     let isSuccess = check(res, {
         [currentFeature + " correct body should return 201 | " + JSON.stringify(positivePayload)]: (r) => r.status === 201,
         [currentFeature + " correct body should have email property"]: (r) => isEqual(r, "data.email", positivePayload.credentialValue),
@@ -126,7 +126,7 @@ function EmailRegistrationTests(route, doNegativeCase) {
     }
 
     if (doNegativeCase && isSuccess) {
-        const failedRes = testPostJson(route, positivePayload)
+        const failedRes = testPostJson(route, positivePayload, {}, tags)
         isSuccess = check(failedRes, {
             [currentFeature + " duplicate user should return 409"]: (r) => r.status === 409
         })

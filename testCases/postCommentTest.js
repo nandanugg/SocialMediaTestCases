@@ -12,18 +12,17 @@ const postCommentTestObjects = generateTestObjects({
     comment: "asdasd"
 })
 
-export function TestPostComment(user, doNegativeCase) {
+export function TestPostComment(user, doNegativeCase, tags = {}) {
     // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/post/comment"
 
-    console.log(JSON.stringify(user))
     const postIds = Object.keys(user.allPostKv)
 
-    let usrWithFriends = TestCommentPost(route, postIds, user, doNegativeCase)
+    let usrWithFriends = TestCommentPost(route, postIds, user, doNegativeCase, tags)
     return usrWithFriends
 }
 
-function TestCommentPost(route, validPostIds, user, doNegativeCase) {
+function TestCommentPost(route, validPostIds, user, doNegativeCase, tags = {}) {
     let res;
     const currentFeature = TEST_NAME + "add post comment"
     const headers = { "Authorization": "Bearer " + user.accessToken }
@@ -31,14 +30,14 @@ function TestCommentPost(route, validPostIds, user, doNegativeCase) {
     let postRoute = __ENV.BASE_URL + "/v1/post"
     if (doNegativeCase) {
         // Negative case, no auth
-        res = testPostJson(route, {}, {})
+        res = testPostJson(route, {}, {}, tags)
         check(res, {
             [currentFeature + " no auth should return 401"]: (r) => r.status === 401
         })
 
         // Negative case, invalid body
         postCommentTestObjects.forEach(payload => {
-            res = testPostJson(route, payload, headers)
+            res = testPostJson(route, payload, headers, tags)
             check(res, {
                 [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
@@ -48,7 +47,7 @@ function TestCommentPost(route, validPostIds, user, doNegativeCase) {
         res = testPostJson(route, {
             postId: "asdasd",
             comment: "asdasd"
-        }, headers)
+        }, headers, tags)
         check(res, {
             [currentFeature + " wrong postId should return 404"]: (r) => r.status === 404
         })
@@ -59,7 +58,7 @@ function TestCommentPost(route, validPostIds, user, doNegativeCase) {
     res = testPostJson(route, {
         postId: validPostIds[0],
         comment
-    }, headers)
+    }, headers, tags)
     check(res, {
         [currentFeature + " correct postId should return 200"]: (r) => r.status === 200
     })
@@ -69,7 +68,7 @@ function TestCommentPost(route, validPostIds, user, doNegativeCase) {
         limit: 10,
         offset: 0,
         search: searchQuery
-    }, headers)
+    }, headers, tags)
     check(res, {
         [currentFeature + " get post after adding comment should return 200"]: (r) => r.status === 200,
         [currentFeature + " get post after adding comment should have the post that already commented"]: (r) => {

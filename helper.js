@@ -140,13 +140,13 @@ export function generateUniqueName() {
  *                             Available options: `"noContentType"`
  * @returns {import("k6/http").RefinedResponse} - k6 http response.
  */
-export function testGet(route, params, headersObj) {
+export function testGet(route, params, headersObj, tags = {}) {
     const queryParams = Object.entries(params)
         .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
         .join('&');
     const modifiedRoute = route + "?" + queryParams;
 
-    return http.get(modifiedRoute, { headers: headersObj });
+    return http.get(modifiedRoute, { headers: headersObj, tags });
 }
 
 /**
@@ -158,11 +158,11 @@ export function testGet(route, params, headersObj) {
  *                             Available options: `"noContentType"`, `"plainBody"`
  * @returns {import("k6/http").RefinedResponse} - k6 http response.
  */
-export function testPostJson(route, body, headersObj, options = []) {
+export function testPostJson(route, body, headersObj, tags = {}, options = [],) {
     const headers = options.includes("noContentType") ? Object.assign({}, headersObj) : Object.assign({ "Content-Type": "application/json" }, headersObj)
     const parsedBody = options.includes("plainBody") ? body : JSON.stringify(body);
 
-    return http.post(route, parsedBody, { headers });
+    return http.post(route, parsedBody, { headers, tags });
 }
 
 
@@ -175,11 +175,11 @@ export function testPostJson(route, body, headersObj, options = []) {
  * @param {object} headersObj - External headers other than `Content-Type`
  * @returns {import("k6/http").RefinedResponse} - k6 http response.
  */
-export function testPatchJson(route, body, headersObj, options = []) {
+export function testPatchJson(route, body, headersObj, tags = {}, options = []) {
     const headers = options.includes("noContentType") ? Object.assign({}, headersObj) : Object.assign({ "Content-Type": "application/json" }, headersObj)
     const parsedBody = options.includes("plainBody") ? body : JSON.stringify(body);
 
-    return http.patch(route, parsedBody, { headers });
+    return http.patch(route, parsedBody, { headers, tags });
 }
 
 
