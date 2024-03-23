@@ -40,10 +40,10 @@ export default function () {
 
     // for each of the user, run login once
     if (userByPhone) {
-      TestPhoneLogin(userByPhone, !runPositiveCase);
+      userByPhone = TestPhoneLogin(userByPhone, !runPositiveCase);
     }
     if (userByEmail) {
-      TestEmailLogin(userByEmail, !runPositiveCase);
+      userByEmail = TestEmailLogin(userByEmail, !runPositiveCase);
     }
 
 
