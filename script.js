@@ -76,7 +76,7 @@ export default function () {
     let userByPhone, userByEmail = null
 
     // add loop in order to test add friend feature
-    for (let index = 0; index < 5; index++) {
+    for (let index = 0; index < 50; index++) {
       [userByPhone, userByEmail] = TestRegistration(!ONLY_POSITIVE_CASE);
       if (!userByPhone || !userByEmail) return;
 
