@@ -13,3 +13,7 @@
 ```bash
 BASE_URL=http://localhost:8080 k6 run script.js
 ```
+#### For load testing
+```bash
+BASE_URL=http://localhost:8080 REAL_WORLD_CASE=true k6 run --vus 300 -i 300 script.js
+```

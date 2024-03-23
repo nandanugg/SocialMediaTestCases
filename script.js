@@ -1,5 +1,5 @@
-import { TestRegistration } from './testCases/registerTest.js';
-import { TestLogin } from './testCases/loginTest.js';
+import { TestRegistration, TestPhoneRegistration, TestEmailRegistration } from './testCases/registerTest.js';
+import { TestLogin, TestEmailLogin, TestPhoneLogin } from './testCases/loginTest.js';
 import { TestUpdateAccount } from './testCases/updateAccountTest.js';
 import { TestUpload } from './testCases/uploadFileTest.js';
 import { TestLinkCredential } from './testCases/linkPhoneNumberOrEmailTest.js';
@@ -21,23 +21,72 @@ export const options = {
 //
 export default function () {
   // eslint-disable-next-line no-undef
-  const ONLY_POSITIVE = __ENV.ONLY_POSITIVE ? true : false
+  const ONLY_POSITIVE_CASE = __ENV.ONLY_POSITIVE ? true : false
   // eslint-disable-next-line no-undef
-  // const REAL_WORLD = __ENV.REAL_WORLD ? true : false
+  const REAL_WORLD_CASE = __ENV.REAL_WORLD_CASE ? true : false;
 
-  let [userByPhone, userByEmail] = TestRegistration(!ONLY_POSITIVE)
-  if (!userByPhone || !userByEmail) return
+  if (REAL_WORLD_CASE) {
+    // 30% of users have negative cases
+    const runPositiveCase = Math.random() > 0.3 ? true : false;
+    let userByPhone = null;
+    let userByEmail = null;
 
-  [userByPhone, userByEmail] = TestLogin(userByPhone, userByEmail, !ONLY_POSITIVE)
-  if (!userByPhone || !userByEmail) return
+    // 70% of users use phone registration
+    if (Math.random() > 0.3) {
+      userByPhone = TestPhoneRegistration(!runPositiveCase);
+    } else {
+      userByEmail = TestEmailRegistration(!runPositiveCase);
+    }
 
-  [userByPhone, userByEmail] = TestLinkCredential(userByPhone, userByEmail, !ONLY_POSITIVE)
-  if (!userByPhone || !userByEmail) return
+    // for each of the user, run login once
+    if (userByPhone) {
+      TestPhoneLogin(userByPhone, !runPositiveCase);
+    }
+    if (userByEmail) {
+      TestEmailLogin(userByEmail, !runPositiveCase);
+    }
 
-  userByPhone = TestUpdateAccount(userByPhone, !ONLY_POSITIVE)
-  userByPhone = TestUpload(userByPhone, !ONLY_POSITIVE)
 
-  userByPhone = TestFriends(userByPhone, !ONLY_POSITIVE)
-  userByPhone = TestPost(userByPhone, !ONLY_POSITIVE)
-  userByPhone = TestPostComment(userByPhone, !ONLY_POSITIVE)
+    if ((userByPhone || userByEmail) && Math.random() > 0.5) {
+      // 50% of the user add a friend
+      TestFriends(userByPhone || userByEmail, !runPositiveCase);
+
+      if (Math.random() > 0.3) {
+        // 70% of the user that add a friend, post something 
+        TestUpload(userByPhone || userByEmail, !runPositiveCase);
+        const usrPos = TestPost(userByPhone || userByEmail, !runPositiveCase);
+        if (Math.random() > 0.3) {
+          // 70% of the user that add a friend and post something, will comment 
+          TestPostComment(usrPos, !runPositiveCase);
+        }
+      }
+
+      if (Math.random() > 0.5) {
+        // 50% of the users that add a friend, update their account
+        TestUpdateAccount(userByPhone || userByEmail, !runPositiveCase);
+      }
+    }
+
+
+    if ((userByPhone || userByEmail) && Math.random() > 0.9) {
+      // 10% of the user that registers, change their credential
+      TestLinkCredential(userByPhone || userByEmail, !runPositiveCase);
+    }
+  } else {
+    let [userByPhone, userByEmail] = TestRegistration(!ONLY_POSITIVE_CASE);
+    if (!userByPhone || !userByEmail) return;
+
+    [userByPhone, userByEmail] = TestLogin(userByPhone, userByEmail, !ONLY_POSITIVE_CASE);
+    if (!userByPhone || !userByEmail) return;
+
+    [userByPhone, userByEmail] = TestLinkCredential(userByPhone, userByEmail, !ONLY_POSITIVE_CASE);
+    if (!userByPhone || !userByEmail) return;
+
+    userByPhone = TestUpdateAccount(userByPhone, !ONLY_POSITIVE_CASE);
+    userByPhone = TestUpload(userByPhone, !ONLY_POSITIVE_CASE);
+
+    userByPhone = TestFriends(userByPhone, !ONLY_POSITIVE_CASE);
+    userByPhone = TestPost(userByPhone, !ONLY_POSITIVE_CASE);
+    userByPhone = TestPostComment(userByPhone, !ONLY_POSITIVE_CASE);
+  }
 }

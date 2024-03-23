@@ -17,21 +17,21 @@ const linkEmailTestObjects = generateTestObjects({
 
 
 export function TestLinkCredential(userByPhone, userByEmail, doNegativeCase, tags = {}) {
-    // eslint-disable-next-line no-undef
-    let route = __ENV.BASE_URL + "/v1/user/link"
 
-    const usrByPhone = TestLinkPhone(route, userByEmail, userByPhone, doNegativeCase, tags)
-    const usrByEmail = TestLinkEmail(route, userByEmail, userByPhone, doNegativeCase, tags)
+    const usrByPhone = TestLinkPhone(userByEmail, userByPhone, doNegativeCase, tags)
+    const usrByEmail = TestLinkEmail(userByEmail, userByPhone, doNegativeCase, tags)
 
     return [usrByPhone, usrByEmail]
 }
 
-function TestLinkPhone(baseRoute, userByEmail, userByPhone, doNegativeCase, tags = {}) {
+export function TestLinkPhone(userByEmail, userByPhone, doNegativeCase, tags = {}) {
     let res
-    const currentFeature = TEST_NAME + "post link phone"
-    const route = baseRoute + "/phone"
+    // eslint-disable-next-line no-undef
+    let route = __ENV.BASE_URL + "/v1/user/link/phone"
     // eslint-disable-next-line no-undef
     let loginRoute = __ENV.BASE_URL + "/v1/user/login"
+
+    const currentFeature = TEST_NAME + "post link phone"
     const positivePayload = {
         phone: generateRandomPhoneNumber(true)
     }
@@ -106,12 +106,14 @@ function TestLinkPhone(baseRoute, userByEmail, userByPhone, doNegativeCase, tags
     } : null
 }
 
-function TestLinkEmail(baseRoute, userByEmail, userByPhone, doNegativeCase, tags = {}) {
+export function TestLinkEmail(userByEmail, userByPhone, doNegativeCase, tags = {}) {
     let res
-    const currentFeature = TEST_NAME + "post link email"
-    const route = baseRoute
+    // eslint-disable-next-line no-undef
+    let route = __ENV.BASE_URL + "/v1/user/link"
     // eslint-disable-next-line no-undef
     let loginRoute = __ENV.BASE_URL + "/v1/user/login"
+
+    const currentFeature = TEST_NAME + "post link email"
     const positivePayload = {
         email: generateRandomEmail()
     }

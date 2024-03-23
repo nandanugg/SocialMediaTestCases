@@ -1,4 +1,4 @@
-import { check, sleep } from 'k6';
+import { check } from 'k6';
 import { generateTestObjects, generateUniqueName, generateRandomPassword, isEqual, isExists, testPostJson, generateRandomPhoneNumber, generateRandomEmail } from "../helper.js";
 
 const registerPhoneTestObjects = generateTestObjects({
@@ -29,26 +29,17 @@ const registerEmailTestObjects = generateTestObjects({
 const TEST_NAME = "(register test)"
 
 export function TestRegistration(doNegativeCase, tags = {}) {
-    let res;
-    // eslint-disable-next-line no-undef
-    let route = __ENV.BASE_URL + "/v1/user/register"
-    if (doNegativeCase) {
-        res = testPostJson(route, {}, {}, tags, ["noContentType"])
-        check(res, {
-            [TEST_NAME + "post register no body should return 400"]: (r) => r.status === 400
-        })
-    }
+    const usrByPhone = TestPhoneRegistration(doNegativeCase, tags)
+    const usrByEmail = TestEmailRegistration(doNegativeCase, tags)
 
-    const usrByPhone = PhoneRegistrationTest(route, doNegativeCase)
-    const usrByEmail = EmailRegistrationTests(route, doNegativeCase)
-
-    sleep(3)
     return [usrByPhone, usrByEmail]
 }
 
 
-function PhoneRegistrationTest(route, doNegativeCase, tags = {}) {
+export function TestPhoneRegistration(doNegativeCase, tags = {}) {
     let res
+    // eslint-disable-next-line no-undef
+    let route = __ENV.BASE_URL + "/v1/user/register"
     const currentFeature = TEST_NAME + "post register phone"
     const positivePayload = {
         credentialType: "phone",
@@ -58,6 +49,12 @@ function PhoneRegistrationTest(route, doNegativeCase, tags = {}) {
     }
 
     if (doNegativeCase) {
+        // Negative case, no body
+        res = testPostJson(route, {}, {}, tags, ["noContentType"])
+        check(res, {
+            [TEST_NAME + "post register no body should return 400"]: (r) => r.status === 400
+        })
+
         // Negative case, invalid body
         registerPhoneTestObjects.forEach(payload => {
             res = testPostJson(route, payload, {}, tags)
@@ -75,9 +72,6 @@ function PhoneRegistrationTest(route, doNegativeCase, tags = {}) {
         [currentFeature + " correct body should have name property"]: (r) => isEqual(r, "data.name", positivePayload.name),
         [currentFeature + " correct body should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
-    if (!isSuccess) {
-        console.log("register failed", res.status, res.body)
-    }
 
     if (doNegativeCase && isSuccess) {
         const failedRes = testPostJson(route, positivePayload, {}, tags)
@@ -93,8 +87,10 @@ function PhoneRegistrationTest(route, doNegativeCase, tags = {}) {
         password: positivePayload.password
     } : null
 }
-function EmailRegistrationTests(route, doNegativeCase, tags = {}) {
+export function TestEmailRegistration(doNegativeCase, tags = {}) {
     let res
+    // eslint-disable-next-line no-undef
+    let route = __ENV.BASE_URL + "/v1/user/register"
     const currentFeature = TEST_NAME + "post register email"
     const positivePayload = {
         credentialType: "email",
@@ -104,6 +100,12 @@ function EmailRegistrationTests(route, doNegativeCase, tags = {}) {
     }
 
     if (doNegativeCase) {
+        // Negative case, no body
+        res = testPostJson(route, {}, {}, tags, ["noContentType"])
+        check(res, {
+            [TEST_NAME + "post register no body should return 400"]: (r) => r.status === 400
+        })
+
         // Negative case, invalid body
         registerEmailTestObjects.forEach(payload => {
             res = testPostJson(route, payload, {}, tags)
@@ -121,9 +123,6 @@ function EmailRegistrationTests(route, doNegativeCase, tags = {}) {
         [currentFeature + " correct body should have name property"]: (r) => isEqual(r, "data.name", positivePayload.name),
         [currentFeature + " correct body should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
-    if (!isSuccess) {
-        console.log("register failed", res.status, res.body)
-    }
 
     if (doNegativeCase && isSuccess) {
         const failedRes = testPostJson(route, positivePayload, {}, tags)

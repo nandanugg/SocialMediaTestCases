@@ -25,11 +25,7 @@ export function isExists(v, query) {
             });
             return val
         }
-    } catch (error) {
-        console.log("failed to parse json")
-        console.log("input:", v.request)
-        console.log("output:", v.body)
-    }
+    } catch (error) { /* empty */ }
     return false
 }
 /**

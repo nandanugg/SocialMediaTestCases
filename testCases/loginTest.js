@@ -25,22 +25,15 @@ const registerEmailTestObjects = generateTestObjects({
 
 
 export function TestLogin(userByPhone, userByEmail, doNegativeCase, tags = {}) {
-    let res;
-    // eslint-disable-next-line no-undef
-    let route = __ENV.BASE_URL + "/v1/user/login"
-    if (doNegativeCase) {
-        res = testPostJson(route, {}, {}, tags, ["noContentType"])
-        check(res, {
-            [TEST_NAME + "post login no body should return 400|"]: (r) => r.status === 400
-        })
-    }
-    const usrByPhone = TestPhoneLogin(route, userByPhone, doNegativeCase)
-    const usrByEmail = TestEmailLogin(route, userByEmail, doNegativeCase)
+    const usrByPhone = TestPhoneLogin(userByPhone, doNegativeCase, tags)
+    const usrByEmail = TestEmailLogin(userByEmail, doNegativeCase, tags)
     return [usrByPhone, usrByEmail]
 }
 
-function TestPhoneLogin(route, user, doNegativeCase, tags = {}) {
+export function TestPhoneLogin(user, doNegativeCase, tags = {}) {
     let res
+    // eslint-disable-next-line no-undef
+    let route = __ENV.BASE_URL + "/v1/user/login"
     const currentFeature = TEST_NAME + "post login phone"
     const positivePayload = {
         credentialType: "phone",
@@ -48,6 +41,11 @@ function TestPhoneLogin(route, user, doNegativeCase, tags = {}) {
         password: user.password
     }
     if (doNegativeCase) {
+        // Negative case, no body
+        res = testPostJson(route, {}, {}, tags, ["noContentType"])
+        check(res, {
+            [TEST_NAME + "post login no body should return 400|"]: (r) => r.status === 400
+        })
         // Negative case, invalid body
         registerPhoneTestObjects.forEach(payload => {
             res = testPostJson(route, payload, {}, tags)
@@ -74,10 +72,6 @@ function TestPhoneLogin(route, user, doNegativeCase, tags = {}) {
         [currentFeature + " correct body should have name property"]: (r) => isEqual(r, "data.name", user.name),
         [currentFeature + " correct body should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
-    if (!isSuccess) {
-        console.log("login failed", res.status, res.body)
-    }
-
 
     return isSuccess ? {
         accessToken: res.json().data.accessToken,
@@ -89,8 +83,10 @@ function TestPhoneLogin(route, user, doNegativeCase, tags = {}) {
 
 
 }
-function TestEmailLogin(route, user, doNegativeCase, tags = {}) {
+export function TestEmailLogin(user, doNegativeCase, tags = {}) {
     let res
+    // eslint-disable-next-line no-undef
+    let route = __ENV.BASE_URL + "/v1/user/login"
     const currentFeature = TEST_NAME + "post login email"
     const positivePayload = {
         credentialType: "email",
@@ -98,6 +94,12 @@ function TestEmailLogin(route, user, doNegativeCase, tags = {}) {
         password: user.password
     }
     if (doNegativeCase) {
+        // Negative case, no body
+        res = testPostJson(route, {}, {}, tags, ["noContentType"])
+        check(res, {
+            [TEST_NAME + "post login no body should return 400|"]: (r) => r.status === 400
+        })
+
         // Negative case, invalid body
         registerEmailTestObjects.forEach(payload => {
             res = testPostJson(route, payload, {}, tags)
@@ -123,10 +125,6 @@ function TestEmailLogin(route, user, doNegativeCase, tags = {}) {
         [currentFeature + " correct body should have name property"]: (r) => isEqual(r, "data.name", user.name),
         [currentFeature + " correct body should have accessToken property"]: (r) => isExists(r, "data.accessToken"),
     })
-    if (!isSuccess) {
-        console.log("login failed", res.status, res.body)
-    }
-
 
     return isSuccess ? {
         accessToken: res.json().data.accessToken,
