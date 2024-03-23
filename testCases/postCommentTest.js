@@ -77,7 +77,7 @@ function TestCommentPost(route, validPostIds, user, doNegativeCase, tags = {}) {
 
             let found = false;
             parsedRes.forEach((v) => {
-                if (v.comments && Array.isArray(v.comments) && v.comments.includes(comment)) {
+                if (v.comments && Array.isArray(v.comments) && v.comments.some(c => c.comment === comment)) {
                     found = true
                 }
             })
