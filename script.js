@@ -20,19 +20,24 @@ export const options = {
 // about authoring k6 scripts.
 //
 export default function () {
-  let [userByPhone, userByEmail] = TestRegistration(true)
+  // eslint-disable-next-line no-undef
+  const ONLY_POSITIVE = __ENV.ONLY_POSITIVE ? true : false
+  // eslint-disable-next-line no-undef
+  // const REAL_WORLD = __ENV.REAL_WORLD ? true : false
+
+  let [userByPhone, userByEmail] = TestRegistration(!ONLY_POSITIVE)
   if (!userByPhone || !userByEmail) return
 
-  [userByPhone, userByEmail] = TestLogin(userByPhone, userByEmail, true)
+  [userByPhone, userByEmail] = TestLogin(userByPhone, userByEmail, !ONLY_POSITIVE)
   if (!userByPhone || !userByEmail) return
 
-  [userByPhone, userByEmail] = TestLinkCredential(userByPhone, userByEmail, true)
+  [userByPhone, userByEmail] = TestLinkCredential(userByPhone, userByEmail, !ONLY_POSITIVE)
   if (!userByPhone || !userByEmail) return
 
-  userByPhone = TestUpdateAccount(userByPhone, true)
-  userByPhone = TestUpload(userByPhone, true)
+  userByPhone = TestUpdateAccount(userByPhone, !ONLY_POSITIVE)
+  userByPhone = TestUpload(userByPhone, !ONLY_POSITIVE)
 
-  userByPhone = TestFriends(userByPhone, true)
-  userByPhone = TestPost(userByPhone, true)
-  userByPhone = TestPostComment(userByPhone, true)
+  userByPhone = TestFriends(userByPhone, !ONLY_POSITIVE)
+  userByPhone = TestPost(userByPhone, !ONLY_POSITIVE)
+  userByPhone = TestPostComment(userByPhone, !ONLY_POSITIVE)
 }
