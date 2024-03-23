@@ -75,11 +75,13 @@ function TestCommentPost(route, validPostIds, user, doNegativeCase, tags = {}) {
             const parsedRes = isExists(r, "data")
             if (!(Array.isArray(parsedRes))) return false
 
-            let found = false;
-            parsedRes.forEach((v) => {
-                if (v.comments && Array.isArray(v.comments) && v.comments.includes(comment)) {
-                    found = true
-                }
+            let found = parsedRes.some(post => {
+                if(post && Array.isArray(post.comments)) {
+                    return !!post.comments.some(({ comment: currentComment }) => {
+                        return !!currentComment.includes(comment)
+                       
+                    })
+                };
             })
             return found
         },
