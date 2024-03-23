@@ -30,6 +30,7 @@ export default function () {
     const runPositiveCase = Math.random() > 0.3 ? true : false;
     let userByPhone = null;
     let userByEmail = null;
+    let user = null;
 
     // 70% of users use phone registration
     if (Math.random() > 0.3) {
@@ -60,17 +61,14 @@ export default function () {
           TestPostComment(usrPos, !runPositiveCase);
         }
       }
-
-      if (Math.random() > 0.5) {
-        // 50% of the users that add a friend, update their account
-        TestUpdateAccount(userByPhone || userByEmail, !runPositiveCase);
+      if ((userByPhone || userByEmail) && Math.random() > 0.5) {
+        // 50% of the user that registers, change their credential
+        user = TestLinkCredential(userByPhone || userByEmail, !runPositiveCase);
+        if (Math.random() > 0.5) {
+          // 50% of the users that add a friend, update their account
+          TestUpdateAccount(user, !runPositiveCase);
+        }
       }
-    }
-
-
-    if ((userByPhone || userByEmail) && Math.random() > 0.9) {
-      // 10% of the user that registers, change their credential
-      TestLinkCredential(userByPhone || userByEmail, !runPositiveCase);
     }
   } else {
     let userByPhone, userByEmail = null
