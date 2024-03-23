@@ -2,7 +2,7 @@ import { TestRegistration, TestPhoneRegistration, TestEmailRegistration } from '
 import { TestLogin, TestEmailLogin, TestPhoneLogin } from './testCases/loginTest.js';
 import { TestUpdateAccount } from './testCases/updateAccountTest.js';
 import { TestUpload } from './testCases/uploadFileTest.js';
-import { TestLinkCredential } from './testCases/linkPhoneNumberOrEmailTest.js';
+import { TestLinkCredential, TestLinkEmail, TestLinkPhone } from './testCases/linkPhoneNumberOrEmailTest.js';
 import { TestFriends } from './testCases/friendsTest.js';
 import { TestPost } from './testCases/postTest.js';
 import { TestPostComment } from './testCases/postCommentTest.js';
@@ -63,7 +63,12 @@ export default function () {
       }
       if ((userByPhone || userByEmail) && Math.random() > 0.5) {
         // 50% of the user that registers, change their credential
-        user = TestLinkCredential(userByPhone || userByEmail, !runPositiveCase);
+        if (userByEmail) {
+          user = TestLinkEmail(userByEmail, !runPositiveCase);
+        }
+        if (userByPhone) {
+          user = TestLinkPhone(userByPhone, !runPositiveCase);
+        }
         if (Math.random() > 0.5) {
           // 50% of the users that add a friend, update their account
           TestUpdateAccount(user, !runPositiveCase);
