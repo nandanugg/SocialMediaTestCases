@@ -73,11 +73,14 @@ export default function () {
       TestLinkCredential(userByPhone || userByEmail, !runPositiveCase);
     }
   } else {
-    let [userByPhone, userByEmail] = TestRegistration(!ONLY_POSITIVE_CASE);
-    if (!userByPhone || !userByEmail) return;
+    let userByPhone, userByEmail = null
+    for (let index = 0; index < 5; index++) {
+      [userByPhone, userByEmail] = TestRegistration(!ONLY_POSITIVE_CASE);
+      if (!userByPhone || !userByEmail) return;
 
-    [userByPhone, userByEmail] = TestLogin(userByPhone, userByEmail, !ONLY_POSITIVE_CASE);
-    if (!userByPhone || !userByEmail) return;
+      [userByPhone, userByEmail] = TestLogin(userByPhone, userByEmail, !ONLY_POSITIVE_CASE);
+      if (!userByPhone || !userByEmail) return;
+    }
 
     [userByPhone, userByEmail] = TestLinkCredential(userByPhone, userByEmail, !ONLY_POSITIVE_CASE);
     if (!userByPhone || !userByEmail) return;

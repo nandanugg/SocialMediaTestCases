@@ -105,7 +105,6 @@ function TestGetFriends(route, user, doNegativeCase, tags = {}) {
     }, headers, tags)
     check(res, {
         [currentFeature + " search with pagination and orderBy asc should return 200"]: (r) => r.status === 200,
-        // TODO: insert a lot of user first before testing
         [currentFeature + " search with pagination and orderBy asc should have only three data"]: (r) => {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length == 3
@@ -165,7 +164,6 @@ function TestGetFriends(route, user, doNegativeCase, tags = {}) {
     }, headers, tags)
     check(res, {
         [currentFeature + " search with pagination and keyword query should return 200"]: (r) => r.status === 200,
-        // TODO: insert a lot of user first before testing
         [currentFeature + " search with pagination and keyword query should have only three data"]: (r) => {
             const parsedRes = isExists(r, "data")
             return Array.isArray(parsedRes) && parsedRes.length == 3
