@@ -16,17 +16,17 @@ const linkEmailTestObjects = generateTestObjects({
 })
 
 
-export function LinkCredential(userByPhone, userByEmail, doNegativeCase, tags = {}) {
+export function TestLinkCredential(userByPhone, userByEmail, doNegativeCase, tags = {}) {
     // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/user/link"
 
-    const usrByPhone = LinkPhoneTest(route, userByEmail, userByPhone, doNegativeCase, tags)
-    const usrByEmail = LinkEmailTest(route, userByEmail, userByPhone, doNegativeCase, tags)
+    const usrByPhone = TestLinkPhone(route, userByEmail, userByPhone, doNegativeCase, tags)
+    const usrByEmail = TestLinkEmail(route, userByEmail, userByPhone, doNegativeCase, tags)
 
     return [usrByPhone, usrByEmail]
 }
 
-function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase, tags = {}) {
+function TestLinkPhone(baseRoute, userByEmail, userByPhone, doNegativeCase, tags = {}) {
     let res
     const currentFeature = TEST_NAME + "post link phone"
     const route = baseRoute + "/phone"
@@ -106,7 +106,7 @@ function LinkPhoneTest(baseRoute, userByEmail, userByPhone, doNegativeCase, tags
     } : null
 }
 
-function LinkEmailTest(baseRoute, userByEmail, userByPhone, doNegativeCase, tags = {}) {
+function TestLinkEmail(baseRoute, userByEmail, userByPhone, doNegativeCase, tags = {}) {
     let res
     const currentFeature = TEST_NAME + "post link email"
     const route = baseRoute

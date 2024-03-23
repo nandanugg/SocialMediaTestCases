@@ -24,7 +24,7 @@ const registerEmailTestObjects = generateTestObjects({
 })
 
 
-export function LoginTest(userByPhone, userByEmail, doNegativeCase, tags = {}) {
+export function TestLogin(userByPhone, userByEmail, doNegativeCase, tags = {}) {
     let res;
     // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/user/login"
@@ -34,12 +34,12 @@ export function LoginTest(userByPhone, userByEmail, doNegativeCase, tags = {}) {
             [TEST_NAME + "post login no body should return 400|"]: (r) => r.status === 400
         })
     }
-    const usrByPhone = PhoneLoginTest(route, userByPhone, doNegativeCase)
-    const usrByEmail = EmailLoginTest(route, userByEmail, doNegativeCase)
+    const usrByPhone = TestPhoneLogin(route, userByPhone, doNegativeCase)
+    const usrByEmail = TestEmailLogin(route, userByEmail, doNegativeCase)
     return [usrByPhone, usrByEmail]
 }
 
-function PhoneLoginTest(route, user, doNegativeCase, tags = {}) {
+function TestPhoneLogin(route, user, doNegativeCase, tags = {}) {
     let res
     const currentFeature = TEST_NAME + "post login phone"
     const positivePayload = {
@@ -89,7 +89,7 @@ function PhoneLoginTest(route, user, doNegativeCase, tags = {}) {
 
 
 }
-function EmailLoginTest(route, user, doNegativeCase, tags = {}) {
+function TestEmailLogin(route, user, doNegativeCase, tags = {}) {
     let res
     const currentFeature = TEST_NAME + "post login email"
     const positivePayload = {

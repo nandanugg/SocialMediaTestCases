@@ -1,8 +1,8 @@
-import { RegistrationTest } from './testCases/registerTest.js';
-import { LoginTest } from './testCases/loginTest.js';
+import { TestRegistration } from './testCases/registerTest.js';
+import { TestLogin } from './testCases/loginTest.js';
 import { TestUpdateAccount } from './testCases/updateAccountTest.js';
-import { UploadTest } from './testCases/uploadFileTest.js';
-import { LinkCredential } from './testCases/linkPhoneNumberOrEmailTest.js';
+import { TestUpload } from './testCases/uploadFileTest.js';
+import { TestLinkCredential } from './testCases/linkPhoneNumberOrEmailTest.js';
 import { TestFriends } from './testCases/friendsTest.js';
 import { TestPost } from './testCases/postTest.js';
 import { TestPostComment } from './testCases/postCommentTest.js';
@@ -62,17 +62,17 @@ export const options = {
 // about authoring k6 scripts.
 //
 export default function () {
-  let [userByPhone, userByEmail] = RegistrationTest(true)
+  let [userByPhone, userByEmail] = TestRegistration(true)
   if (!userByPhone || !userByEmail) return
 
-  [userByPhone, userByEmail] = LoginTest(userByPhone, userByEmail, true)
+  [userByPhone, userByEmail] = TestLogin(userByPhone, userByEmail, true)
   if (!userByPhone || !userByEmail) return
 
-  [userByPhone, userByEmail] = LinkCredential(userByPhone, userByEmail, true)
+  [userByPhone, userByEmail] = TestLinkCredential(userByPhone, userByEmail, true)
   if (!userByPhone || !userByEmail) return
 
   userByPhone = TestUpdateAccount(userByPhone, true)
-  userByPhone = UploadTest(userByPhone, true)
+  userByPhone = TestUpload(userByPhone, true)
 
   userByPhone = TestFriends(userByPhone, true)
   userByPhone = TestPost(userByPhone, true)

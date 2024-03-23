@@ -10,7 +10,7 @@ var positivePayload = {
 };
 
 
-export function UploadTest(user, doNegativeCase, tags = {}) {
+export function TestUpload(user, doNegativeCase, tags = {}) {
     let res;
     // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/image"

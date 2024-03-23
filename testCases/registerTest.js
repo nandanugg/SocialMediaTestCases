@@ -28,7 +28,7 @@ const registerEmailTestObjects = generateTestObjects({
 
 const TEST_NAME = "(register test)"
 
-export function RegistrationTest(doNegativeCase, tags = {}) {
+export function TestRegistration(doNegativeCase, tags = {}) {
     let res;
     // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/user/register"
