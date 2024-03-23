@@ -62,12 +62,22 @@ function TestAddPost(route, user, doNegativeCase, tags = {}) {
         })
     }
 
-    // Positive case, add post
-    res = testPostJson(route, positivePayload, headers, tags)
-    check(res, {
-        [currentFeature + " correct body should return 200"]: (r) => r.status === 200
-        ,
-    })
+    for (let i = 0; i < 3; i++) {
+        // Positive case, add post
+        res = testPostJson(route, i > 1 ? positivePayload : {
+            postInHtml: "stress sekali berada di project sprint gaes " + generateUniqueName(),
+            tags: [
+                tagsDictionary[0],
+                tagsDictionary[Math.floor(Math.random() * tagsDictionary.length)],
+                tagsDictionary[Math.floor(Math.random() * tagsDictionary.length)],
+                tagsDictionary[Math.floor(Math.random() * tagsDictionary.length)],
+            ]
+        }, headers, tags)
+        check(res, {
+            [currentFeature + " correct body should return 200"]: (r) => r.status === 200
+            ,
+        })
+    }
 
     // Positive case, get post that already added
     res = testGet(route, {
