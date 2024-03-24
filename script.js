@@ -62,15 +62,15 @@ export default function () {
         }
       }
       if ((userByPhone || userByEmail) && Math.random() > 0.5) {
-        // 50% of the user that registers, change their credential
-        if (userByEmail) {
-          user = TestLinkEmail(userByEmail, !runPositiveCase);
-        }
+        // 50% of the user that registers and add a friend, change their credential
         if (userByPhone) {
-          user = TestLinkPhone(userByPhone, !runPositiveCase);
+          user = TestLinkEmail(userByPhone, !runPositiveCase);
         }
-        if (Math.random() > 0.5) {
-          // 50% of the users that add a friend, update their account
+        if (userByEmail) {
+          user = TestLinkPhone(userByEmail, !runPositiveCase);
+        }
+        if (Math.random() > 0.5 && user) {
+          // 50% of the users that add a friend and link their credential, update their account
           TestUpdateAccount(user, !runPositiveCase);
         }
       }

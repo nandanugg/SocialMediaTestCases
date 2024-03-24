@@ -19,7 +19,7 @@ const linkEmailTestObjects = generateTestObjects({
 export function TestLinkCredential(userByPhone, userByEmail, doNegativeCase, tags = {}) {
 
     const usrByPhone = TestLinkPhone(userByEmail, userByPhone, doNegativeCase, tags)
-    const usrByEmail = TestLinkEmail(userByEmail, userByPhone, doNegativeCase, tags)
+    const usrByEmail = TestLinkEmail(userByPhone, userByEmail, doNegativeCase, tags)
 
     return [usrByPhone, usrByEmail]
 }
@@ -59,22 +59,23 @@ export function TestLinkPhone(userByEmail, userByPhone, doNegativeCase, tags = {
                 [currentFeature + ' wrong body should return 400 | ' + JSON.stringify(payload)]: (r) => r.status === 400,
             })
         })
+        if (userByPhone) {
+            // Negative case, updating existing phone from user that registered using phone       
+            res = testPostJson(route, {
+                phone: userByPhone.phone,
+            }, userByPhoneHeaders, tags)
+            check(res, {
+                [currentFeature + " same phone from user that registered using phone number should return 400"]: (r) => r.status === 400
+            })
 
-        // Negative case, updating existing phone from user that registered using phone       
-        res = testPostJson(route, {
-            phone: userByPhone.phone,
-        }, userByPhoneHeaders, tags)
-        check(res, {
-            [currentFeature + " same phone from user that registered using phone number should return 400"]: (r) => r.status === 400
-        })
-
-        // Negative case, updating existing Phone from user that registered using email 
-        res = testPostJson(route, {
-            Phone: userByPhone.phone,
-        }, userByEmailHeaders, tags)
-        check(res, {
-            [currentFeature + " same phone from user that registered using email should return 409"]: (r) => r.status === 409,
-        })
+            // Negative case, updating existing Phone from user that registered using email 
+            res = testPostJson(route, {
+                Phone: userByPhone.phone,
+            }, userByEmailHeaders, tags)
+            check(res, {
+                [currentFeature + " same phone from user that registered using email should return 409"]: (r) => r.status === 409,
+            })
+        }
     }
 
     // Postiive case, updating phone
@@ -106,7 +107,7 @@ export function TestLinkPhone(userByEmail, userByPhone, doNegativeCase, tags = {
     } : null
 }
 
-export function TestLinkEmail(userByEmail, userByPhone, doNegativeCase, tags = {}) {
+export function TestLinkEmail(userByPhone, userByEmail, doNegativeCase, tags = {}) {
     let res
     // eslint-disable-next-line no-undef
     let route = __ENV.BASE_URL + "/v1/user/link"
@@ -142,21 +143,22 @@ export function TestLinkEmail(userByEmail, userByPhone, doNegativeCase, tags = {
             })
         })
 
-        // Negative case, updating existing email from user that registered using email       
-        res = testPostJson(route, {
-            email: userByEmail.email,
-        }, userByEmailHeaders, tags)
-        check(res, {
-            [currentFeature + " same email from user that registered using email should return 400"]: (r) => r.status === 400
-        })
-
-        // Negative case, updating existing email from user that registered using phone 
-        res = testPostJson(route, {
-            email: userByEmail.email,
-        }, userByPhoneHeaders, tags)
-        check(res, {
-            [currentFeature + " same email from user that registered using phone should return 409"]: (r) => r.status === 409,
-        })
+        if (userByEmail) {
+            // Negative case, updating existing email from user that registered using email       
+            res = testPostJson(route, {
+                email: userByEmail.email,
+            }, userByEmailHeaders, tags)
+            check(res, {
+                [currentFeature + " same email from user that registered using email should return 400"]: (r) => r.status === 400
+            })
+            // Negative case, updating existing email from user that registered using phone 
+            res = testPostJson(route, {
+                email: userByEmail.email,
+            }, userByPhoneHeaders, tags)
+            check(res, {
+                [currentFeature + " same email from user that registered using phone should return 409"]: (r) => r.status === 409,
+            })
+        }
     }
 
     // Postiive case, updating email 
