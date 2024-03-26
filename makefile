@@ -22,6 +22,6 @@ run300:
 run600:
 	REAL_WORLD_CASE=true k6 run -i 600 --vus 600 script.js | grep -E 'checks|http_req_duration|\{ expected_response:true \}'
 
-.PHONY: runAll
-runAll:
-	make run && sleep 5 && make run50 && sleep 5 && make run100 && sleep 5 && make run200 && sleep 5 && make run300 && sleep 5 && make run600
+.PHONY: runAllLoadTests
+runAllLoadTests:
+	make run50 && sleep 5 && make run100 && sleep 5 && make run200 && sleep 5 && make run300 && sleep 5 && make run600
